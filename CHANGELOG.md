@@ -5,6 +5,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-09
+
+### Added
+
+- Pin-up chaos in the app: pin-ups of Ronnie peek in from every screen edge, sprint across the window, wander around non-stop, lurk behind the profile, status and Top 8 boxes, and do a cancan line when blocking succeeds. All of it is click-through, so no button is ever blocked, and it calms down under the system's reduced-motion setting.
+
 ## [1.0.0] - 2026-11-09
 
 First release of PingSpace, a rework of [Peak2548/ow-server-switcher](https://github.com/Peak2548/ow-server-switcher) for Australian players.
@@ -27,5 +33,6 @@ First release of PingSpace, a rework of [Peak2548/ow-server-switcher](https://gi
 - Selecting Australia in the original tool blocked some Australian servers, because its Singapore (`34.124.0.0/16`) and Netherlands (`37.244.0.0/16`) ranges contain Sydney ranges. Australian ranges are now subtracted from every block list.
 - Rules from the original tool applied to every program on the PC. They are now limited to Overwatch.exe, and rules left behind by the original tool are cleaned up.
 
-[Unreleased]: https://github.com/MJWNA/pingspace/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/MJWNA/pingspace/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/MJWNA/pingspace/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/MJWNA/pingspace/releases/tag/v1.0.0

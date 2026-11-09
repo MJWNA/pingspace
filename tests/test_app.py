@@ -88,7 +88,7 @@ class PageTests(unittest.TestCase):
         self.assertNotIn("@import", self.html)
 
     def test_demo_copy_matches_app(self):
-        for name in ("index.html", "me.jpg"):
+        for name in ("index.html", "me.jpg", "pinup1.webp", "pinup2.webp"):
             self.assertTrue(filecmp.cmp(os.path.join(ROOT, "ui", name), os.path.join(ROOT, "docs", "demo", name), shallow=False),
                             "docs/demo/%s is out of date: copy ui/%s over it" % (name, name))
 

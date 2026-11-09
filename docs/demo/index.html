@@ -195,6 +195,20 @@ hr.rb{border:0;height:3px;background:linear-gradient(90deg,red,orange,yellow,lim
   animation:spin 3s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
+/* ~*~ PINUP CHAOS ~*~ every pinup is click-through, so nothing ever blocks a button */
+#pinchaos{position:fixed;inset:0;pointer-events:none;z-index:55;overflow:hidden}
+#pinchaos img,.lurk img{display:block;pointer-events:none;filter:drop-shadow(0 6px 10px rgba(0,0,0,.6))}
+.peek,.runner,.wander{position:absolute;left:0;top:0;pointer-events:none}
+.pose{transform-origin:50% 50%}
+.jig{animation:jiggle .45s ease-in-out infinite alternate}
+@keyframes jiggle{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
+.flip{transform:scaleX(-1)}
+/* lurkers pop up from behind the boxes */
+.lurk{position:absolute;bottom:100%;width:112px;height:118px;overflow:hidden;pointer-events:none;z-index:3}
+.lurk img{height:290px;transform:translateY(100%);animation:lurk 6s ease-in-out infinite}
+@keyframes lurk{0%,12%,88%,100%{transform:translateY(100%)}24%{transform:translateY(-4%) rotate(-6deg)}34%,66%{transform:translateY(6%) rotate(4deg)}76%{transform:translateY(2%) rotate(-3deg)}}
+@media (prefers-reduced-motion:reduce){.lurk img{animation:none;transform:translateY(10%)}}
+
 /* synced to the stutter in the song */
 body.glitchnow .glitch{animation:shake .3s steps(3) 1;filter:invert(1) hue-rotate(120deg)}
 body.glitchnow #name{transform:skewX(-20deg) translateX(6px)}
@@ -222,6 +236,7 @@ body.glitchnow #bg{filter:hue-rotate(180deg) saturate(3) contrast(2)}
 <body>
 <div id="bg"></div><div id="bg2"></div>
 <img id="dvd" src="me.jpg" alt="">
+<div id="pinchaos" aria-hidden="true"></div>
 
 <div id="wrap">
   <div id="topbar">
@@ -575,6 +590,7 @@ function applyResult(r) {
   if (r && r.active) S.active = r.active;
   render();
   if (r && r.ok) log(r.message, 'ok'); else oops(r ? r.message : 'no response');
+  if (r && r.ok && S.active.length) Pinups.cancan();
 }
 
 function doBlock() {
@@ -688,6 +704,105 @@ var COMMENTS = [
 })();
 $('#lastlogin').textContent = new Date().toLocaleDateString();
 log('~*RoNNiE*~ updated his profile!!');
+
+/* ---------- PINUP CHAOS: ronnie, everywhere, constantly ---------- */
+var Pinups = (function () {
+  var box = document.getElementById('pinchaos');
+  var SRC = ['pinup1.webp', 'pinup2.webp'], RATIO = 0.37;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  function pick() { return SRC[Math.random() * SRC.length | 0]; }
+  function flipMaybe() { return Math.random() < 0.5 ? ' scaleX(-1)' : ''; }
+  // wrapper (moves) > pose (static rotate/flip) > img (jiggles)
+  function make(cls, h, poseTf, jig) {
+    var el = document.createElement('div'); el.className = cls;
+    var pose = document.createElement('div'); pose.className = 'pose'; if (poseTf) pose.style.transform = poseTf;
+    var img = document.createElement('img'); img.src = pick(); img.alt = ''; img.style.height = h + 'px';
+    if (jig) { img.className = 'jig'; img.style.animationDuration = rnd(0.3, 0.6) + 's'; }
+    pose.appendChild(img); el.appendChild(pose); box.appendChild(el); return el;
+  }
+
+  // peekaboo: pops halfway in from a random screen edge, wiggles, ducks back out
+  function peek() {
+    var W = innerWidth, H = innerHeight, h = rnd(200, 330), w = h * RATIO, x, y, to, pose;
+    var edge = ['bottom', 'bottom', 'left', 'right', 'top'][Math.random() * 5 | 0];
+    if (edge === 'bottom') { x = rnd(0, W - w); y = H; to = [0, -h * rnd(0.45, 0.62)]; pose = 'rotate(' + rnd(-12, 12) + 'deg)' + flipMaybe(); }
+    if (edge === 'top') { x = rnd(0, W - w); y = -h; to = [0, h * rnd(0.4, 0.55)]; pose = 'rotate(180deg)' + flipMaybe(); }
+    if (edge === 'left') { x = -w * 1.2; y = rnd(0, H - h); to = [w * rnd(0.8, 1.05), 0]; pose = 'rotate(' + rnd(25, 50) + 'deg)'; }
+    if (edge === 'right') { x = W + w * 0.2; y = rnd(0, H - h); to = [-w * rnd(0.8, 1.05), 0]; pose = 'scaleX(-1) rotate(' + rnd(25, 50) + 'deg)'; }
+    var el = make('peek', h, pose, true);
+    el.style.left = x + 'px'; el.style.top = y + 'px';
+    var a = 'translate(0px,0px)', b = 'translate(' + to[0] + 'px,' + to[1] + 'px)', over = 'translate(' + to[0] * 1.1 + 'px,' + to[1] * 1.1 + 'px)';
+    el.animate([{ transform: a }, { transform: over, offset: 0.14 }, { transform: b, offset: 0.22 }, { transform: b, offset: 0.8 }, { transform: a }],
+      { duration: rnd(1900, 3200), easing: 'ease-in-out' }).onfinish = function () { el.remove(); };
+  }
+
+  // streaker: sprints across the whole screen, hopping, trailing sparkles
+  function run() {
+    var W = innerWidth, H = innerHeight, h = rnd(130, 200), w = h * RATIO, ltr = Math.random() < 0.5;
+    var y = rnd(40, H - h - 20), hop = rnd(40, 110), n = 12, frames = [];
+    var el = make('runner', h, ltr ? '' : 'scaleX(-1)', false);
+    for (var i = 0; i <= n; i++) {
+      var t = i / n, xx = ltr ? -w + t * (W + 2 * w) : W + w - t * (W + 2 * w);
+      frames.push({ transform: 'translate(' + xx + 'px,' + (y - Math.abs(Math.sin(t * Math.PI * 4)) * hop) + 'px) rotate(' + (i % 2 ? 14 : -14) + 'deg)' });
+    }
+    var anim = el.animate(frames, { duration: rnd(2200, 4000), easing: 'linear' });
+    var trail = setInterval(function () { var r = el.getBoundingClientRect(); spark(r.left + r.width / 2, r.bottom - 10); }, 70);
+    anim.onfinish = function () { clearInterval(trail); el.remove(); };
+  }
+
+  // wanderer: roams forever, flips and leans into the direction it's going
+  function wanderer(h) {
+    var el = make('wander', h, '', false), pose = el.firstChild;
+    var x = rnd(0, innerWidth - 80), y = rnd(0, innerHeight - h), tx = x, ty = y, vx = 0, vy = 0;
+    (function retarget() {
+      tx = rnd(-20, innerWidth - h * RATIO + 20); ty = rnd(-h * 0.3, innerHeight - h * 0.6);
+      setTimeout(retarget, rnd(900, 2600));
+    })();
+    (function step() {
+      vx = (vx + (tx - x) * 0.004) * 0.9; vy = (vy + (ty - y) * 0.004) * 0.9; x += vx; y += vy;
+      el.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+      pose.style.transform = (vx < 0 ? 'scaleX(-1) ' : '') + 'rotate(' + Math.min(25, Math.abs(vx) * 3) + 'deg)';
+      requestAnimationFrame(step);
+    })();
+  }
+
+  // lurkers: head and chest pop up from behind boxes, then sink again
+  function lurkers() {
+    [['#me', 'left:14px', 0], ['#ext', 'right:18px', 2.2], ['#top8', 'right:40px', 4.1]].forEach(function (L) {
+      var host = document.querySelector(L[0]); if (!host) return;
+      host.style.position = 'relative';
+      var d = document.createElement('div'); d.className = 'lurk'; d.setAttribute('style', L[1]);
+      var img = document.createElement('img'); img.src = pick(); img.alt = ''; img.style.animationDelay = L[2] + 's';
+      if (Math.random() < 0.5) img.style.scale = '-1 1';
+      d.appendChild(img); host.appendChild(d);
+    });
+  }
+
+  // victory cancan: a chorus line of ronnies kicks up when blocking works
+  function cancan() {
+    if (reduce) return;
+    var W = innerWidth, H = innerHeight, n = Math.max(5, Math.round(W / 130)), h = 260;
+    for (var i = 0; i < n; i++) (function (i) {
+      var el = make('peek', h, i % 2 ? 'scaleX(-1)' : '', true);
+      el.style.left = (i + 0.5) * (W / n) - h * RATIO / 2 + 'px'; el.style.top = H + 'px';
+      var up = 'translateY(-' + h * 0.7 + 'px) rotate(-6deg)', up2 = 'translateY(-' + h * 0.62 + 'px) rotate(6deg)';
+      el.animate([{ transform: 'translateY(0)' }, { transform: up, offset: 0.15 }, { transform: up2, offset: 0.3 }, { transform: up, offset: 0.45 },
+        { transform: up2, offset: 0.6 }, { transform: up, offset: 0.8 }, { transform: 'translateY(0)' }],
+        { duration: 3200, delay: i * 90, easing: 'ease-in-out', fill: 'backwards' }).onfinish = function () { el.remove(); };
+    })(i);
+  }
+
+  function loop(fn, a, b) { (function go() { setTimeout(function () { if (!document.hidden) fn(); go(); }, rnd(a, b)); })(); }
+  lurkers();
+  if (!reduce) {
+    setTimeout(peek, 600);
+    loop(peek, 1400, 3800);
+    loop(run, 4500, 9000);
+    wanderer(150); wanderer(110);
+  }
+  return { cancan: cancan, peek: peek, run: run };
+})();
 
 /* ---------- connect 2 python (or demo mode in a normal browser) ---------- */
 function demoApi() {
