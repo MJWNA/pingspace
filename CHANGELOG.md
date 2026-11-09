@@ -5,6 +5,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-11-09
+
+### Fixed
+
+- **Find Overwatch** and **[ find it ]** did nothing. The file picker's filter (`Overwatch (Overwatch.exe)`) isn't a format pywebview accepts, so it raised before the picker opened and the page swallowed the error. The picker now opens in the Overwatch folder, the blog log says what happened (picked, cancelled, or not Overwatch.exe), the path box flashes, and any failure shows an error box. A test checks the filter against pywebview's own validator.
+
 ## [1.1.0] - 2026-11-09
 
 ### Added
@@ -34,6 +40,7 @@ First release of PingSpace, a rework of [Peak2548/ow-server-switcher](https://gi
 - Selecting Australia in the original tool blocked some Australian servers, because its Singapore (`34.124.0.0/16`) and Netherlands (`37.244.0.0/16`) ranges contain Sydney ranges. Australian ranges are now subtracted from every block list.
 - Rules from the original tool applied to every program on the PC. They are now limited to Overwatch.exe, and rules left behind by the original tool are cleaned up.
 
-[Unreleased]: https://github.com/MJWNA/pingspace/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/MJWNA/pingspace/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/MJWNA/pingspace/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/MJWNA/pingspace/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/MJWNA/pingspace/releases/tag/v1.0.0

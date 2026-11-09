@@ -124,6 +124,8 @@ table.det td{padding:3px 5px;vertical-align:top}
 table.det td.k{background:#2a0050;color:#ffb3f0;font-weight:bold;width:38%}
 table.det td.v{background:#1b0030}
 #pathbox{width:100%;box-sizing:border-box;font:10px "Courier New", monospace;background:#000;color:var(--lime);border:1px inset var(--purple);padding:3px}
+#pathbox.flash{animation:pathflash .5s steps(2,start) 4}
+@keyframes pathflash{50%{background:var(--lime);color:#000}}
 
 /* music player */
 .player .np{font:11px "Courier New", monospace;color:var(--cyan);overflow:hidden;white-space:nowrap}
@@ -621,7 +623,14 @@ function doUnblock() {
 }
 function doBrowse(ev) {
   if (ev) ev.preventDefault();
-  api.browse().then(function (p) { if (p) { $('#pathbox').value = p; log('found overwatch: ' + p, 'ok'); } });
+  log('opening the file picker... find Overwatch.exe (its in the _retail_ folder)');
+  api.browse($('#pathbox').value.trim()).then(function (p) {
+    if (!p) { log('u closed the picker without picking anything. nothing changed'); return; }
+    var box = $('#pathbox'); box.value = p;
+    box.classList.remove('flash'); void box.offsetWidth; box.classList.add('flash');
+    if (/(^|[\\\/])overwatch\.exe$/i.test(p)) log('found overwatch: ' + p + '. now hit BLOCK EM', 'ok');
+    else log('hmm, thats not called Overwatch.exe. u sure? ' + p, 'err');
+  }, function (e) { oops('the file picker broke: ' + String(e && e.message || e)); });
 }
 function doRefresh() {
   setBusy(true, 'checking...');

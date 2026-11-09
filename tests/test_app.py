@@ -69,6 +69,17 @@ class ApiDryRunTests(unittest.TestCase):
         self.api.set_music(False)
         self.assertFalse(main.Api().get_state()["music"])
 
+    def test_file_picker_filters_are_valid(self):
+        try:
+            from webview.util import parse_file_type
+        except ImportError:
+            self.skipTest("pywebview not installed")
+        for f in main.FILE_TYPES:
+            parse_file_type(f)  # raises ValueError for a filter pywebview rejects
+
+    def test_browse_without_window_returns_empty(self):
+        self.assertEqual(self.api.browse(), "")
+
     def test_self_test_passes(self):
         try:
             import webview  # noqa: F401

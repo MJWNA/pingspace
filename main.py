@@ -30,6 +30,9 @@ GCP_CACHE_PATH = os.path.join(CONFIG_DIR, "gcp_ranges_cache.json")
 GROUP_LABELS = {"asia": "Asia", "americas": "Americas", "europe": "Europe-ME"}
 DEFAULT_GROUPS = ["asia"]
 WEBVIEW2_URL = "https://developer.microsoft.com/microsoft-edge/webview2/"
+# pywebview only accepts wildcard filters: "Description (*.ext)". A literal file
+# name like "(Overwatch.exe)" raises and the picker never opens.
+FILE_TYPES = ("Programs (*.exe)",)
 
 
 # --- Admin ---------------------------------------------------------------
@@ -172,15 +175,23 @@ class Api:
             active, _ = self._active()
         return {"ok": ok, "message": msg, "active": sorted(active)}
 
-    def browse(self):
+    def browse(self, current=""):
+        """Open a file picker for Overwatch.exe. Returns the chosen path, or "" if cancelled."""
         if not self._window:
             return ""
         import webview
         dialog = getattr(getattr(webview, "FileDialog", None), "OPEN", None)
         if dialog is None:
             dialog = webview.OPEN_DIALOG  # pywebview < 5
-        result = self._window.create_file_dialog(dialog, file_types=("Overwatch (Overwatch.exe)", "Programs (*.exe)"))
-        return os.path.normpath(result[0]) if result else ""
+        start = ""
+        for candidate in [os.path.dirname(current or "")] + [os.path.dirname(p) for p in firewall.COMMON_INSTALL_PATHS]:
+            if candidate and os.path.isdir(candidate):
+                start = candidate
+                break
+        result = self._window.create_file_dialog(dialog, directory=start, file_types=FILE_TYPES)
+        if not result:
+            return ""
+        return os.path.normpath(result[0] if isinstance(result, (list, tuple)) else result)
 
     def set_music(self, on):
         self._cfg["music"] = bool(on)
