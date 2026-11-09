@@ -5,6 +5,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-11-10
+
+### Fixed
+
+- In the app the sausage cursor only showed over buttons. pywebview injects `body { cursor: default }` after the page's CSS when text selection is off, which beat the page's plain `body` rule. The cursor rule now uses `html body`, and a test checks it still outranks pywebview's injected CSS.
+
 ## [1.2.1] - 2026-11-09
 
 ### Changed
@@ -57,7 +63,8 @@ First release of PingSpace, a rework of [Peak2548/ow-server-switcher](https://gi
 - Selecting Australia in the original tool blocked some Australian servers, because its Singapore (`34.124.0.0/16`) and Netherlands (`37.244.0.0/16`) ranges contain Sydney ranges. Australian ranges are now subtracted from every block list.
 - Rules from the original tool applied to every program on the PC. They are now limited to Overwatch.exe, and rules left behind by the original tool are cleaned up.
 
-[Unreleased]: https://github.com/MJWNA/pingspace/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/MJWNA/pingspace/compare/v1.2.2...HEAD
+[1.2.2]: https://github.com/MJWNA/pingspace/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/MJWNA/pingspace/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/MJWNA/pingspace/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/MJWNA/pingspace/compare/v1.1.0...v1.1.1

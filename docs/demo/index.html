@@ -14,9 +14,11 @@ body{
   background:#000;
   color:#f6d9ff;
   font:11px Verdana, Tahoma, Arial, sans-serif;
-  cursor:url(sausage-cursor.png) 3 3, auto;
   overflow-x:hidden;
 }
+/* the sausage cursor. "html body" on purpose: pywebview injects "body{cursor:default}" after
+   this stylesheet when text selection is off, and a plain "body" rule would lose to it */
+html, html body{cursor:url(sausage-cursor.png) 3 3, auto}
 button,input,a,.friend,label{cursor:url(sausage-cursor.png) 3 3, pointer}
 
 /* the obnoxious tiled me background */

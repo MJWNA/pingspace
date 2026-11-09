@@ -98,6 +98,18 @@ class PageTests(unittest.TestCase):
         self.assertEqual(re.findall(r"""(?:src|href)\s*=\s*["']https?://""", self.html), [])
         self.assertNotIn("@import", self.html)
 
+    def test_sausage_cursor_beats_pywebview_injected_css(self):
+        # pywebview appends "body {...; cursor: default;}" when text selection is off. Our rule
+        # has to be more specific than a bare "body" selector or the cursor reverts to the arrow.
+        try:
+            import webview
+            js = open(os.path.join(os.path.dirname(webview.__file__), "js", "customize.js"), encoding="utf-8").read()
+            self.assertIn("cursor: default", js)
+        except (ImportError, OSError):
+            pass
+        self.assertIn("html, html body{cursor:url(sausage-cursor.png)", self.html)
+        self.assertNotRegex(self.html, r"(?m)^\s*body\{[^}]*cursor:")
+
     def test_demo_copy_matches_app(self):
         for name in ("index.html", "me.jpg", "pinup1.webp", "pinup2.webp", "goo.js", "sausage-cursor.png",
                      "sfx/boing.mp3", "sfx/ooh.mp3", "sfx/ohmy.mp3", "sfx/whistle.mp3"):
