@@ -35,12 +35,27 @@ a:hover{color:var(--hot)}
 
 .wrap{max-width:820px;margin:0 auto;padding:0 16px 60px;position:relative}
 
-/* floaty stickers on big screens */
-.sticker{position:fixed;width:190px;z-index:0;pointer-events:none;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
-.sticker.l{left:calc(50% - 640px);top:150px;animation:bob 4s ease-in-out infinite}
-.sticker.r{right:calc(50% - 640px);top:420px;animation:bob 5s ease-in-out infinite reverse}
-@keyframes bob{50%{transform:translateY(-14px) rotate(-4deg)}}
-@media (max-width:1290px){.sticker{display:none}}
+/* pinups + stickers down both gutters on big screens (they scroll with the page) */
+body{position:relative}
+.gutter{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.gutter img{position:absolute;filter:drop-shadow(0 8px 14px rgba(0,0,0,.55));animation:sway 5s ease-in-out infinite}
+.gutter .pin{width:230px}
+.gutter .stk{width:180px}
+.gutter .L{left:calc(50% - 410px - 290px)}
+.gutter .R{right:calc(50% - 410px - 290px)}
+.gutter .flip{transform:scaleX(-1)}
+.gutter .flip{animation-name:swayflip}
+@keyframes sway{50%{transform:translateY(-12px) rotate(-3deg)}}
+@keyframes swayflip{0%,100%{transform:scaleX(-1)}50%{transform:scaleX(-1) translateY(-12px) rotate(3deg)}}
+@media (max-width:1290px){.gutter{display:none}}
+
+/* install supervisors box */
+.sup{display:flex;justify-content:center;align-items:flex-end;gap:6px;background:
+  radial-gradient(circle at 50% 110%, #ff9ee8, #fff 70%);padding:14px 10px 0}
+.sup img{height:300px;width:auto;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35))}
+.sup img:nth-child(2){transform:scaleX(-1)}
+.sup .tag2{align-self:center;font:bold 20px/1.25 "Comic Sans MS", "Comic Neue", cursive;text-align:center;max-width:220px;color:var(--hot)}
+@media (max-width:600px){.sup img{height:200px}.sup .tag2{font-size:15px;max-width:110px}}
 
 header{text-align:center;padding:18px 0 4px;position:relative;z-index:1}
 header .banner{width:100%;max-width:560px;display:block;margin:0 auto;border-radius:14px}
@@ -142,8 +157,20 @@ footer{text-align:center;color:#ffd6f6;font-size:14px;margin-top:30px;position:r
 </style>
 </head>
 <body>
-<img class="sticker l" src="assets/goblin.webp" alt="">
-<img class="sticker r" src="assets/bouncer.webp" alt="">
+<div class="gutter" aria-hidden="true">
+  <img class="pin L" style="top:3%" src="assets/pinup1.webp" alt="">
+  <img class="stk R" style="top:6%" src="assets/goblin.webp" alt="">
+  <img class="pin R flip" style="top:15%;animation-delay:-1s" src="assets/pinup2.webp" alt="">
+  <img class="stk L" style="top:22%" src="assets/bouncer.webp" alt="">
+  <img class="pin L flip" style="top:32%;animation-delay:-2s" src="assets/pinup1.webp" alt="">
+  <img class="pin R" style="top:40%;animation-delay:-3s" src="assets/pinup2.webp" alt="">
+  <img class="stk L" style="top:52%" src="assets/roo.webp" alt="">
+  <img class="pin R flip" style="top:58%;animation-delay:-1.5s" src="assets/pinup1.webp" alt="">
+  <img class="pin L" style="top:68%;animation-delay:-2.5s" src="assets/pinup2.webp" alt="">
+  <img class="stk R" style="top:77%" src="assets/goblin.webp" alt="">
+  <img class="pin L flip" style="top:85%;animation-delay:-.5s" src="assets/pinup1.webp" alt="">
+  <img class="pin R" style="top:90%;animation-delay:-3.5s" src="assets/pinup2.webp" alt="">
+</div>
 
 <div class="wrap">
   <header>
@@ -175,6 +202,15 @@ footer{text-align:center;color:#ffd6f6;font-size:14px;margin-top:30px;position:r
         <li>About <b>5 minutes</b> and one working brain cell. we'll work with what we've got</li>
       </ul>
       <div class="nope">Nothing else to install first. No Python, no coding, no "open the terminal" nerd rubbish. It's one file u download and double-click.</div>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="hdr purple">ur install supervisors 4 today</div>
+    <div class="sup">
+      <img src="assets/pinup1.webp" alt="Ronnie as a 1950s pin-up in a red polka-dot swimsuit">
+      <div class="tag2">these 2 are watching u install.<br>dont let them down.</div>
+      <img src="assets/pinup2.webp" alt="Ronnie as a 1950s pin-up in a pink leopard swimsuit blowing a kiss">
     </div>
   </div>
 
