@@ -14,10 +14,10 @@ body{
   background:#000;
   color:#f6d9ff;
   font:11px Verdana, Tahoma, Arial, sans-serif;
-  cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M2 2 L2 19 L7 14 L11 22 L14 21 L10 13 L17 13 Z' fill='%23ff2bd6' stroke='%23000' stroke-width='1.5'/%3E%3Ccircle cx='19' cy='5' r='2' fill='%23fff200'/%3E%3C/svg%3E") 2 2, auto;
+  cursor:url(sausage-cursor.png) 3 3, auto;
   overflow-x:hidden;
 }
-button,input,a,.friend,label{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Ctext x='1' y='20' font-size='20'%3E%E2%99%A5%3C/text%3E%3C/svg%3E") 8 8, pointer}
+button,input,a,.friend,label{cursor:url(sausage-cursor.png) 3 3, pointer}
 
 /* the obnoxious tiled me background */
 #bg{position:fixed;inset:-120px;z-index:-2;
@@ -207,16 +207,22 @@ hr.rb{border:0;height:3px;background:linear-gradient(90deg,red,orange,yellow,lim
 .flip{transform:scaleX(-1)}
 /* lurkers pop up from behind the boxes */
 .lurk{position:absolute;bottom:100%;width:112px;height:118px;overflow:hidden;pointer-events:none;z-index:3}
-.lurk img{height:290px;transform:translateY(100%);animation:lurk 6s ease-in-out infinite}
+.lurk .pinhit{transform:translateY(100%);animation:lurk 6s ease-in-out infinite}
+.lurk img{height:290px}
+/* every pin-up sits in a .pinhit with 3 invisible corner markers so the goo can trace its outline */
+.pinhit{display:inline-block;vertical-align:top;position:relative;pointer-events:none}
+.pinhit > i{position:absolute;width:0;height:0}
+.pinhit > i:nth-of-type(1){left:0;top:0}.pinhit > i:nth-of-type(2){left:100%;top:0}.pinhit > i:nth-of-type(3){left:0;top:100%}
 @keyframes lurk{0%,12%,88%,100%{transform:translateY(100%)}24%{transform:translateY(-4%) rotate(-6deg)}34%,66%{transform:translateY(6%) rotate(4deg)}76%{transform:translateY(2%) rotate(-3deg)}}
-@media (prefers-reduced-motion:reduce){.lurk img{animation:none;transform:translateY(10%)}}
+@media (prefers-reduced-motion:reduce){.lurk .pinhit{animation:none;transform:translateY(10%)}}
 
 /* ~*~ the bum gag: ronnie keeps getting in the way of the block button ~*~ (above the loading screen so u see the wobble) */
 .bum{position:fixed;left:0;top:0;pointer-events:none;z-index:85;opacity:0;transform:translateY(30px) rotate(6deg);
   transition:opacity .2s, transform .35s cubic-bezier(.3,1.6,.5,1)}
 .bum.on{opacity:1;transform:none}
-.bum img{height:100%;display:block;transform-origin:50% 80%;filter:drop-shadow(0 6px 10px rgba(0,0,0,.6))}
-.bum.boop img{animation:jelly .75s ease-out}
+.bum .pinhit{height:100%;transform-origin:50% 80%}
+.bum img{height:100%;display:block;filter:drop-shadow(0 6px 10px rgba(0,0,0,.6))}
+.bum.boop .pinhit{animation:jelly .75s ease-out}
 @keyframes jelly{0%{transform:scale(1,1)}12%{transform:scale(1.28,.78)}28%{transform:scale(.84,1.2)}44%{transform:scale(1.14,.9)}60%{transform:scale(.95,1.06)}78%{transform:scale(1.03,.98)}100%{transform:scale(1,1)}}
 .boing{position:fixed;z-index:87;pointer-events:none;white-space:nowrap;font:bold 36px Impact,"Arial Black",sans-serif;color:#fff200;
   -webkit-text-stroke:2px #000;text-shadow:3px 3px 0 #ff0090;animation:boing .95s ease-out forwards}
@@ -727,6 +733,15 @@ var COMMENTS = [
 $('#lastlogin').textContent = new Date().toLocaleDateString();
 log('~*RoNNiE*~ updated his profile!!');
 
+/* a pin-up inside a hit box: <span class="pinhit"><img><i></i><i></i><i></i></span>.
+   the 3 empty <i> corner markers let goo.js work out exactly where ronnie is on screen */
+function hitbox(src) {
+  var s = document.createElement('span'); s.className = 'pinhit';
+  var img = document.createElement('img'); img.src = src; img.alt = ''; s.appendChild(img);
+  for (var i = 0; i < 3; i++) s.appendChild(document.createElement('i'));
+  return s;
+}
+
 /* ---------- PINUP CHAOS: ronnie, everywhere, constantly ---------- */
 var Pinups = (function () {
   var box = document.getElementById('pinchaos');
@@ -739,9 +754,9 @@ var Pinups = (function () {
   function make(cls, h, poseTf, jig) {
     var el = document.createElement('div'); el.className = cls;
     var pose = document.createElement('div'); pose.className = 'pose'; if (poseTf) pose.style.transform = poseTf;
-    var img = document.createElement('img'); img.src = pick(); img.alt = ''; img.style.height = h + 'px';
-    if (jig) { img.className = 'jig'; img.style.animationDuration = rnd(0.3, 0.6) + 's'; }
-    pose.appendChild(img); el.appendChild(pose); box.appendChild(el); return el;
+    var pic = hitbox(pick()); pic.firstChild.style.height = h + 'px';
+    if (jig) { pic.classList.add('jig'); pic.style.animationDuration = rnd(0.3, 0.6) + 's'; }
+    pose.appendChild(pic); el.appendChild(pose); box.appendChild(el); return el;
   }
 
   // peekaboo: pops halfway in from a random screen edge, wiggles, ducks back out
@@ -795,9 +810,9 @@ var Pinups = (function () {
       var host = document.querySelector(L[0]); if (!host) return;
       host.style.position = 'relative';
       var d = document.createElement('div'); d.className = 'lurk'; d.setAttribute('style', L[1]);
-      var img = document.createElement('img'); img.src = pick(); img.alt = ''; img.style.animationDelay = L[2] + 's';
-      if (Math.random() < 0.5) img.style.scale = '-1 1';
-      d.appendChild(img); host.appendChild(d);
+      var pic = hitbox(pick()); pic.style.animationDelay = L[2] + 's';
+      if (Math.random() < 0.5) pic.style.scale = '-1 1';
+      d.appendChild(pic); host.appendChild(d);
     });
   }
 
@@ -830,7 +845,7 @@ var Pinups = (function () {
 var Bum = (function () {
   var VOICES = ['sfx/ooh.mp3', 'sfx/ohmy.mp3', 'sfx/whistle.mp3'], WORDS = ['BOING!', 'OOH!', 'OI!', 'CHEEKY!', 'BOOP!', 'OH MY!'];
   var el = document.createElement('div'); el.className = 'bum';
-  var img = document.createElement('img'); img.src = 'pinup2.webp'; img.alt = ''; el.appendChild(img);
+  el.appendChild(hitbox('pinup2.webp'));
   document.body.appendChild(el);
   var hideT = null;
   function place(btn) {
@@ -911,5 +926,7 @@ connect().then(function (a) {
   }, function (e) { oops(String(e)); });
 }).then(function () { setBusy(false); });
 </script>
+<script>window.GOO_CONFIG = { surfaces: '.box,.hdr,button,.friend,table,td,img,marquee,p,input,.viz,#ext,#topbar,#footer', z: 86 };</script>
+<script src="goo.js"></script>
 </body>
 </html>

@@ -38,7 +38,8 @@ a:hover{color:var(--hot)}
 /* pinups + stickers down both gutters on big screens (they scroll with the page) */
 body{position:relative}
 .gutter{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.gutter img{position:absolute;filter:drop-shadow(0 8px 14px rgba(0,0,0,.55));animation:sway 5s ease-in-out infinite}
+.gutter > *{position:absolute;filter:drop-shadow(0 8px 14px rgba(0,0,0,.55));animation:sway 5s ease-in-out infinite}
+.gutter .pinhit img{width:100%;display:block}
 .gutter .pin{width:230px}
 .gutter .stk{width:180px}
 .gutter .L{left:calc(50% - 410px - 290px)}
@@ -52,8 +53,8 @@ body{position:relative}
 /* install supervisors box */
 .sup{display:flex;justify-content:center;align-items:flex-end;gap:6px;background:
   radial-gradient(circle at 50% 110%, #ff9ee8, #fff 70%);padding:14px 10px 0}
-.sup img{height:300px;width:auto;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35))}
-.sup img:nth-child(2){transform:scaleX(-1)}
+.sup img{height:300px;width:auto;display:block;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35))}
+.sup .flipx{transform:scaleX(-1)}
 .sup .tag2{align-self:center;font:bold 20px/1.25 "Comic Sans MS", "Comic Neue", cursive;text-align:center;max-width:220px;color:var(--hot)}
 @media (max-width:600px){.sup img{height:200px}.sup .tag2{font-size:15px;max-width:110px}}
 
@@ -147,9 +148,11 @@ footer{text-align:center;color:#ffd6f6;font-size:14px;margin-top:30px;position:r
 html, body{cursor:url(assets/sausage-cursor.png) 3 3, auto}
 a, button, label, summary, input, .dl{cursor:url(assets/sausage-cursor.png) 3 3, pointer}
 
-/* the cursor leaks. dont ask. (click-through, fades, desktop only) */
-#goo{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:40;
-  filter:url(#goofx) drop-shadow(0 1px 1px rgba(0,0,0,.45)) drop-shadow(0 0 2px rgba(60,40,70,.35))}
+/* the cursor leaks (demo/goo.js, shared with the app). pin-ups sit in a .pinhit with
+   3 invisible corner markers so the drips can land on ronnie's actual outline */
+.pinhit{display:inline-block;vertical-align:top;position:relative}
+.pinhit > i{position:absolute;width:0;height:0}
+.pinhit > i:nth-of-type(1){left:0;top:0}.pinhit > i:nth-of-type(2){left:100%;top:0}.pinhit > i:nth-of-type(3){left:0;top:100%}
 .counter{display:inline-block;background:#000;color:var(--lime);font:bold 18px "Courier New", monospace;letter-spacing:3px;border:2px inset #777;padding:2px 8px}
 
 @media (max-width:600px){
@@ -165,24 +168,19 @@ a, button, label, summary, input, .dl{cursor:url(assets/sausage-cursor.png) 3 3,
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <filter id="goofx"><feGaussianBlur in="SourceGraphic" stdDeviation="4"/>
-    <feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 24 -10"/></filter>
-</svg>
-<canvas id="goo" aria-hidden="true"></canvas>
 <div class="gutter" aria-hidden="true">
-  <img class="pin L" style="top:3%" src="assets/pinup1.webp" alt="">
+  <span class="pin L pinhit" style="top:3%"><img src="assets/pinup1.webp" alt=""><i></i><i></i><i></i></span>
   <img class="stk R" style="top:6%" src="assets/goblin.webp" alt="">
-  <img class="pin R flip" style="top:15%;animation-delay:-1s" src="assets/pinup2.webp" alt="">
+  <span class="pin R flip pinhit" style="top:15%;animation-delay:-1s"><img src="assets/pinup2.webp" alt=""><i></i><i></i><i></i></span>
   <img class="stk L" style="top:22%" src="assets/bouncer.webp" alt="">
-  <img class="pin L flip" style="top:32%;animation-delay:-2s" src="assets/pinup1.webp" alt="">
-  <img class="pin R" style="top:40%;animation-delay:-3s" src="assets/pinup2.webp" alt="">
+  <span class="pin L flip pinhit" style="top:32%;animation-delay:-2s"><img src="assets/pinup1.webp" alt=""><i></i><i></i><i></i></span>
+  <span class="pin R pinhit" style="top:40%;animation-delay:-3s"><img src="assets/pinup2.webp" alt=""><i></i><i></i><i></i></span>
   <img class="stk L" style="top:52%" src="assets/roo.webp" alt="">
-  <img class="pin R flip" style="top:58%;animation-delay:-1.5s" src="assets/pinup1.webp" alt="">
-  <img class="pin L" style="top:68%;animation-delay:-2.5s" src="assets/pinup2.webp" alt="">
+  <span class="pin R flip pinhit" style="top:58%;animation-delay:-1.5s"><img src="assets/pinup1.webp" alt=""><i></i><i></i><i></i></span>
+  <span class="pin L pinhit" style="top:68%;animation-delay:-2.5s"><img src="assets/pinup2.webp" alt=""><i></i><i></i><i></i></span>
   <img class="stk R" style="top:77%" src="assets/goblin.webp" alt="">
-  <img class="pin L flip" style="top:85%;animation-delay:-.5s" src="assets/pinup1.webp" alt="">
-  <img class="pin R" style="top:90%;animation-delay:-3.5s" src="assets/pinup2.webp" alt="">
+  <span class="pin L flip pinhit" style="top:85%;animation-delay:-.5s"><img src="assets/pinup1.webp" alt=""><i></i><i></i><i></i></span>
+  <span class="pin R pinhit" style="top:90%;animation-delay:-3.5s"><img src="assets/pinup2.webp" alt=""><i></i><i></i><i></i></span>
 </div>
 
 <div class="wrap">
@@ -221,9 +219,9 @@ a, button, label, summary, input, .dl{cursor:url(assets/sausage-cursor.png) 3 3,
   <div class="box">
     <div class="hdr purple">ur install supervisors 4 today</div>
     <div class="sup">
-      <img src="assets/pinup1.webp" alt="Ronnie as a 1950s pin-up in a red polka-dot swimsuit">
+      <span class="pinhit"><img src="assets/pinup1.webp" alt="Ronnie as a 1950s pin-up in a red polka-dot swimsuit"><i></i><i></i><i></i></span>
       <div class="tag2">these 2 are watching u install.<br>dont let them down.</div>
-      <img src="assets/pinup2.webp" alt="Ronnie as a 1950s pin-up in a pink leopard swimsuit blowing a kiss">
+      <span class="pinhit flipx"><img src="assets/pinup2.webp" alt="Ronnie as a 1950s pin-up in a pink leopard swimsuit blowing a kiss"><i></i><i></i><i></i></span>
     </div>
   </div>
 
@@ -407,132 +405,6 @@ a, button, label, summary, input, .dl{cursor:url(assets/sausage-cursor.png) 3 3,
 </div>
 
 <script>
-// the leaky cursor: a goo blob hangs off the pointer, swells when u slow down,
-// drops, and splats on whatever is underneath. purely visual and click-through.
-(function () {
-  var mq = window.matchMedia;
-  if (!mq || !mq('(pointer: fine)').matches || mq('(prefers-reduced-motion: reduce)').matches) return;
-  var cv = document.getElementById('goo'), ctx = cv.getContext('2d');
-  var COLOR = '#ecebe1', GLOSS = '#ffffff';
-  var TIP_X = 6, TIP_Y = 8;   // where the drip leaves the sausage cursor, relative to its click point
-  var SURF = 'p,li,img,.mock,.dl,.hdr,.box,h1,h2,summary,label,.need,.nope,.lol,.tag,.counter,ol,ul,footer,.shot,.sup';
-  var mx = -999, my = -999, speed = 0, lastMove = 0, running = false;
-  var hang = { x: 0, y: 0, vx: 0, vy: 0, m: 0.1 };
-  var drops = [], puddles = [];
-  window.__goo = { drops: drops, puddles: puddles };
-  function rnd(a, b) { return a + Math.random() * (b - a); }
-  function size() {
-    var d = window.devicePixelRatio || 1;
-    cv.width = innerWidth * d; cv.height = innerHeight * d; ctx.setTransform(d, 0, 0, d, 0, 0);
-  }
-  size(); addEventListener('resize', size);
-
-  function blockAt(x, y) {
-    var el = document.elementFromPoint(x, y);
-    if (!el || el === document.body || el === document.documentElement) return null;
-    return el.closest(SURF);
-  }
-  // first thing below (x, y) that it can land on: a box top, a paragraph, a button... or the floor
-  function landingY(x, y) {
-    var start = blockAt(x, y), floor = innerHeight - 3;
-    for (var yy = y + 8; yy < floor; yy += 5) {
-      var b = blockAt(x, yy);
-      if (b && b !== start && !b.contains(start)) return Math.max(y + 8, b.getBoundingClientRect().top);
-    }
-    return floor;
-  }
-  function drop(x, y, r, vx, vy) {
-    drops.push({ x: x, y: y + scrollY, r: r, vx: vx, vy: vy, land: landingY(x, y) + scrollY });
-  }
-  function splat(d) {
-    var drips = [], n = Math.random() < 0.7 ? 1 + (Math.random() * 2 | 0) : 0;
-    for (var i = 0; i < n; i++) drips.push({ dx: rnd(-d.r * 1.4, d.r * 1.4), len: 0, max: rnd(10, 34), sp: rnd(0.08, 0.22) });
-    puddles.push({ x: d.x, y: d.land, r: d.r, t: 0, life: rnd(5000, 9000), drips: drips });
-    if (puddles.length > 45) puddles.shift();
-  }
-  function blob(x, y, r) { if (r > 0.3) { ctx.beginPath(); ctx.arc(x, y, r, 0, 6.2832); ctx.fill(); } }
-  // wet look: a white glint on the bigger blobs
-  function glossy(x, y, r) {
-    blob(x, y, r);
-    if (r > 3) { ctx.fillStyle = GLOSS; blob(x - r * 0.35, y - r * 0.35, r * 0.3); ctx.fillStyle = COLOR; }
-  }
-
-  addEventListener('mousemove', function (e) {
-    var dx = e.clientX - mx, dy = e.clientY - my;
-    if (mx < -900) { hang.x = e.clientX; hang.y = e.clientY + 10; dx = dy = 0; }
-    mx = e.clientX; my = e.clientY; lastMove = performance.now();
-    speed = speed * 0.7 + Math.min(80, Math.hypot(dx, dy)) * 0.3;
-    if (speed > 22 && Math.random() < 0.3) drop(mx - dx * 0.4, my - dy * 0.4 + 6, rnd(2, 3.6), dx * 0.06, dy * 0.06);
-    start();
-  }, { passive: true });
-  document.addEventListener('mouseleave', function () { mx = my = -999; });
-
-  var last = 0;
-  function frame(now) {
-    var dt = Math.min(48, now - (last || now)) / 16.7; last = now;
-    ctx.clearRect(0, 0, innerWidth, innerHeight);
-    ctx.fillStyle = COLOR;
-    var sy = scrollY;
-
-    // the blob hanging off the cursor
-    if (mx > -900) {
-      speed *= Math.pow(0.9, dt);
-      var slow = speed < 3;
-      hang.m = Math.min(1, hang.m + (slow ? 0.022 : 0.007) * dt);
-      var ox = mx + TIP_X, oy = my + TIP_Y;             // underside of the sausage's tip
-      var tx = ox, ty = oy + 6 + hang.m * 30;
-      hang.vx = (hang.vx + (tx - hang.x) * 0.12 * dt) * Math.pow(0.8, dt);
-      hang.vy = (hang.vy + ((ty - hang.y) * 0.12 + 0.35) * dt) * Math.pow(0.8, dt);
-      hang.x += hang.vx * dt; hang.y += hang.vy * dt;
-      var R = 3.2 + hang.m * 8.5;
-      if (hang.m >= 1 || (hang.m > 0.55 && slow && Math.random() < 0.02 * dt)) {
-        drop(hang.x, hang.y, R, hang.vx * 0.4, Math.max(0, hang.vy * 0.4));
-        hang.m = 0.08; hang.y = oy + 6;
-      }
-      blob(ox, oy, 3.6);                               // goo stuck to the tip
-      for (var i = 1; i <= 9; i++) {                    // the strand, thin in the middle
-        var t = i / 9;
-        blob(ox + (hang.x - ox) * t, oy + (hang.y - oy) * t, 1.6 + (R - 1.6) * t * t);
-      }
-      glossy(hang.x, hang.y, R);
-    }
-
-    // falling drops, stretched along their fall
-    for (var k = drops.length - 1; k >= 0; k--) {
-      var d = drops[k];
-      d.vy += 0.5 * dt; d.vx *= Math.pow(0.97, dt); d.x += d.vx * dt; d.y += d.vy * dt;
-      if (d.y + d.r * 0.4 >= d.land) { d.y = d.land; splat(d); drops.splice(k, 1); continue; }
-      var y0 = d.y - sy;
-      glossy(d.x, y0, d.r);
-      blob(d.x - d.vx * 0.6, y0 - Math.min(d.vy, 14) * 0.7, d.r * 0.7);
-      blob(d.x - d.vx * 1.1, y0 - Math.min(d.vy, 14) * 1.3, d.r * 0.4);
-    }
-
-    // splats sitting on stuff, with drips running down, then fading away
-    for (var p = puddles.length - 1; p >= 0; p--) {
-      var q = puddles[p]; q.t += 16.7 * dt;
-      var f = q.t < 120 ? q.t / 120 : (q.t > q.life ? 1 - (q.t - q.life) / 1500 : 1);
-      if (f <= 0) { puddles.splice(p, 1); continue; }
-      var yy = q.y - sy, r = q.r * f;
-      if (yy < -60 || yy > innerHeight + 60) continue;
-      blob(q.x - r * 1.35, yy - r * 0.15, r * 0.65);
-      blob(q.x + r * 1.25, yy - r * 0.15, r * 0.6);
-      glossy(q.x, yy - r * 0.3, r * 1.05);
-      for (var j = 0; j < q.drips.length; j++) {
-        var dr = q.drips[j];
-        dr.len = Math.min(dr.max, dr.len + dr.sp * dt);
-        for (var s = 0; s <= dr.len; s += 3) blob(q.x + dr.dx, yy + s, Math.max(1.5, r * 0.38 * (1 - s / (dr.max + 8))) * f);
-        glossy(q.x + dr.dx, yy + dr.len, r * 0.5);
-      }
-    }
-
-    var idle = now - lastMove > 6000;
-    if (idle && !drops.length && !puddles.length) { running = false; ctx.clearRect(0, 0, innerWidth, innerHeight); return; }
-    requestAnimationFrame(frame);
-  }
-  function start() { if (!running) { running = true; last = 0; requestAnimationFrame(frame); } }
-})();
-
 // tick boxes remember where u got up to (only on this browser)
 (function () {
   var boxes = document.querySelectorAll('input[data-step]');
@@ -554,5 +426,7 @@ a, button, label, summary, input, .dl{cursor:url(assets/sausage-cursor.png) 3 3,
   });
 })();
 </script>
+<script>window.GOO_CONFIG = { surfaces: 'p,li,img,.mock,.dl,.hdr,.box,h1,h2,summary,label,.need,.nope,.lol,.tag,.counter,ol,ul,footer,.shot', z: 40 };</script>
+<script src="demo/goo.js"></script>
 </body>
 </html>

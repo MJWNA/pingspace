@@ -5,6 +5,17 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-11-09
+
+### Added
+
+- Sausage cursor and leaky goo in the app, shared with the install guide (`ui/goo.js`). A blob hangs off the cursor tip, swells when the pointer slows, drops, and splats on whatever is underneath, with drips that fade after a few seconds. Every few seconds the tip fires a burst of 2 to 4 spurts, each weaker than the last, that arc through the air and land on things, with dripping in between.
+- Drops land on the pin-ups themselves, following each image's exact outline (head, shoulders, chest), and stick to them as they move, flip, jiggle and wobble. Every pin-up now sits in a `.pinhit` box with three invisible corner markers so the goo can trace its on-screen transform.
+
+### Fixed
+
+- The second "install supervisor" pin-up in the guide was meant to be mirrored but wasn't.
+
 ## [1.1.1] - 2026-11-09
 
 ### Fixed
@@ -40,7 +51,8 @@ First release of PingSpace, a rework of [Peak2548/ow-server-switcher](https://gi
 - Selecting Australia in the original tool blocked some Australian servers, because its Singapore (`34.124.0.0/16`) and Netherlands (`37.244.0.0/16`) ranges contain Sydney ranges. Australian ranges are now subtracted from every block list.
 - Rules from the original tool applied to every program on the PC. They are now limited to Overwatch.exe, and rules left behind by the original tool are cleaned up.
 
-[Unreleased]: https://github.com/MJWNA/pingspace/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/MJWNA/pingspace/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/MJWNA/pingspace/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/MJWNA/pingspace/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/MJWNA/pingspace/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/MJWNA/pingspace/releases/tag/v1.0.0
