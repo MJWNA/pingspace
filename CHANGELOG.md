@@ -10,6 +10,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 ### Added
 
 - Pin-up chaos in the app: pin-ups of Ronnie peek in from every screen edge, sprint across the window, wander around non-stop, lurk behind the profile, status and Top 8 boxes, and do a cancan line when blocking succeeds. All of it is click-through, so no button is ever blocked, and it calms down under the system's reduced-motion setting.
+- The bum gag: hovering the block button slides Ronnie's pin-up over it, and clicking boops him with a jelly wobble, a comic BOING and an ElevenLabs sound effect. The click always goes through to the button.
 
 ## [1.0.0] - 2026-11-09
 

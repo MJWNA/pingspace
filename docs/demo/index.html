@@ -209,6 +209,19 @@ hr.rb{border:0;height:3px;background:linear-gradient(90deg,red,orange,yellow,lim
 @keyframes lurk{0%,12%,88%,100%{transform:translateY(100%)}24%{transform:translateY(-4%) rotate(-6deg)}34%,66%{transform:translateY(6%) rotate(4deg)}76%{transform:translateY(2%) rotate(-3deg)}}
 @media (prefers-reduced-motion:reduce){.lurk img{animation:none;transform:translateY(10%)}}
 
+/* ~*~ the bum gag: ronnie keeps getting in the way of the block button ~*~ (above the loading screen so u see the wobble) */
+.bum{position:fixed;left:0;top:0;pointer-events:none;z-index:85;opacity:0;transform:translateY(30px) rotate(6deg);
+  transition:opacity .2s, transform .35s cubic-bezier(.3,1.6,.5,1)}
+.bum.on{opacity:1;transform:none}
+.bum img{height:100%;display:block;transform-origin:50% 80%;filter:drop-shadow(0 6px 10px rgba(0,0,0,.6))}
+.bum.boop img{animation:jelly .75s ease-out}
+@keyframes jelly{0%{transform:scale(1,1)}12%{transform:scale(1.28,.78)}28%{transform:scale(.84,1.2)}44%{transform:scale(1.14,.9)}60%{transform:scale(.95,1.06)}78%{transform:scale(1.03,.98)}100%{transform:scale(1,1)}}
+.boing{position:fixed;z-index:87;pointer-events:none;white-space:nowrap;font:bold 36px Impact,"Arial Black",sans-serif;color:#fff200;
+  -webkit-text-stroke:2px #000;text-shadow:3px 3px 0 #ff0090;animation:boing .95s ease-out forwards}
+@keyframes boing{0%{transform:translate(-50%,-50%) scale(.2) rotate(-15deg);opacity:0}25%{transform:translate(-50%,-95%) scale(1.3) rotate(8deg);opacity:1}100%{transform:translate(-50%,-170%) scale(1) rotate(-4deg);opacity:0}}
+.finger{position:fixed;z-index:88;pointer-events:none;font-size:44px;line-height:1;color:#fff;-webkit-text-stroke:1.5px #000;animation:boopf .5s ease-out forwards}
+@keyframes boopf{0%{transform:translate(-50%,-150%) rotate(90deg)}40%{transform:translate(-50%,-85%) rotate(90deg) scale(.9)}100%{transform:translate(-50%,-140%) rotate(90deg);opacity:0}}
+
 /* synced to the stutter in the song */
 body.glitchnow .glitch{animation:shake .3s steps(3) 1;filter:invert(1) hue-rotate(120deg)}
 body.glitchnow #name{transform:skewX(-20deg) translateX(6px)}
@@ -802,6 +815,51 @@ var Pinups = (function () {
     wanderer(150); wanderer(110);
   }
   return { cancan: cancan, peek: peek, run: run };
+})();
+
+/* ---------- the bum gag: hover the block button and ronnie's bum gets in the way. click = boop ---------- */
+var Bum = (function () {
+  var VOICES = ['sfx/ooh.mp3', 'sfx/ohmy.mp3', 'sfx/whistle.mp3'], WORDS = ['BOING!', 'OOH!', 'OI!', 'CHEEKY!', 'BOOP!', 'OH MY!'];
+  var el = document.createElement('div'); el.className = 'bum';
+  var img = document.createElement('img'); img.src = 'pinup2.webp'; img.alt = ''; el.appendChild(img);
+  document.body.appendChild(el);
+  var hideT = null;
+  function place(btn) {
+    var r = btn.getBoundingClientRect(), h = Math.max(150, Math.min(250, r.height * 4.4)), w = h * 0.376;
+    el.style.height = h + 'px';
+    el.style.left = (r.right - w * 1.05) + 'px';   // stood at the end of the button,
+    el.style.top = (r.bottom - h * 0.72) + 'px';   // hip and bum right over it
+  }
+  function show(btn) { clearTimeout(hideT); place(btn); el.classList.add('on'); }
+  function hide(ms) { clearTimeout(hideT); hideT = setTimeout(function () { el.classList.remove('on'); }, ms || 700); }
+  function play(src, delay) {
+    setTimeout(function () {
+      try { var a = new Audio(src); a.volume = Math.min(1, $('#vol').value / 100 + 0.35); var p = a.play(); if (p) p.catch(function () {}); } catch (e) {}
+    }, delay || 0);
+  }
+  function pop(cls, text, x, y) {
+    var s = document.createElement('span'); s.className = cls; s.textContent = text;
+    s.style.left = x + 'px'; s.style.top = y + 'px'; document.body.appendChild(s);
+    setTimeout(function () { s.remove(); }, 1000);
+  }
+  function boop(ev, btn) {
+    show(btn);
+    el.classList.remove('boop'); void el.offsetWidth; el.classList.add('boop');
+    var r = btn.getBoundingClientRect();
+    var x = ev && ev.clientX ? ev.clientX : r.left + r.width * 0.7, y = ev && ev.clientY ? ev.clientY : r.top + r.height / 2;
+    pop('finger', '☞', x, y);
+    pop('boing', WORDS[Math.random() * WORDS.length | 0], x, y - 20);
+    for (var i = 0; i < 5; i++) spark(x + (Math.random() - 0.5) * 80, y - Math.random() * 60);
+    play('sfx/boing.mp3', 0);
+    play(VOICES[Math.random() * VOICES.length | 0], 160);
+    hide(1600);
+  }
+  $$('.act-block').forEach(function (b) {
+    b.addEventListener('mouseenter', function () { show(b); });
+    b.addEventListener('mouseleave', function () { hide(); });
+    b.addEventListener('click', function (ev) { boop(ev, b); });
+  });
+  return { boop: boop };
 })();
 
 /* ---------- connect 2 python (or demo mode in a normal browser) ---------- */
