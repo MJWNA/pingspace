@@ -124,28 +124,34 @@
   }
   function drop(x, y, r, vx, vy) {   // viewport coords in; drops live in page coords
     drops.push({ x: x, y: y + scrollY, r: r, vx: vx, vy: vy, land: vy < 0 ? null : landingY(x, y) + scrollY });
-    if (drops.length > 70) drops.shift();
+    if (drops.length > 140) drops.shift();
   }
-  // a spurt: one big glob plus a few droplets fired up and out of the sausage tip, weaker each time (p)
+  // a spurt: a big glob, a rope of medium globs behind it on the same arc (the goo filter
+  // fuses them into one thick stream) and a spray of droplets. far more volume than a drip,
+  // and weaker each time within a burst (p)
   function spurt(x, y, p) {
-    var ang = -2.2 + rnd(-0.45, 0.45), sp = rnd(9, 13) * p;
-    drop(x, y, rnd(5, 7.5) * (0.6 + 0.4 * p), Math.cos(ang) * sp, Math.sin(ang) * sp);
-    for (var i = 2 + (Math.random() * 3 | 0); i > 0; i--) {
-      var a2 = ang + rnd(-0.35, 0.35), s2 = sp * rnd(0.55, 0.9);
-      drop(x, y, rnd(1.8, 3.6), Math.cos(a2) * s2, Math.sin(a2) * s2);
+    var ang = -2.2 + rnd(-0.4, 0.4), sp = rnd(10, 14) * p, size = 0.65 + 0.35 * p;
+    drop(x, y, rnd(9, 12.5) * size, Math.cos(ang) * sp, Math.sin(ang) * sp);
+    for (var j = 1, n = 3 + (Math.random() * 2 | 0); j <= n; j++) {
+      var f = 1 - j * 0.11, a1 = ang + rnd(-0.06, 0.06);
+      drop(x, y, rnd(5.5, 8) * size * (1 - j * 0.08), Math.cos(a1) * sp * f, Math.sin(a1) * sp * f);
+    }
+    for (var i = 5 + (Math.random() * 4 | 0); i > 0; i--) {
+      var a2 = ang + rnd(-0.45, 0.45), s2 = sp * rnd(0.5, 0.95);
+      drop(x, y, rnd(2.4, 4.6) * size, Math.cos(a2) * s2, Math.sin(a2) * s2);
     }
     window.__goo.spurts++;
   }
   function drips(r) {
-    var out = [], n = Math.random() < 0.75 ? 1 + (Math.random() * 2 | 0) : 0;
-    for (var i = 0; i < n; i++) out.push({ dx: rnd(-r * 1.4, r * 1.4), len: 0, max: rnd(10, 38), sp: rnd(0.08, 0.22) });
+    var big = r > 7, out = [], n = big ? 2 + (Math.random() * 3 | 0) : (Math.random() < 0.75 ? 1 + (Math.random() * 2 | 0) : 0);
+    for (var i = 0; i < n; i++) out.push({ dx: rnd(-r * 1.4, r * 1.4), len: 0, max: rnd(10, 38) * (big ? 1.6 : 1), sp: rnd(0.08, 0.22) });
     return out;
   }
   function splat(d, on) {
     var p = { x: d.x, y: d.land, r: d.r, t: 0, life: rnd(4000, 8000), drips: drips(d.r) };
     if (on) { p.pic = on.pic; p.u = on.u; p.v = on.v; p.life += 2500; }   // stuck to ronnie, sticks around longer
     puddles.push(p);
-    if (puddles.length > 70) puddles.shift();
+    if (puddles.length > 110) puddles.shift();
   }
   function blob(x, y, r) { if (r > 0.3) { ctx.beginPath(); ctx.arc(x, y, r, 0, 6.2832); ctx.fill(); } }
   function glossy(x, y, r) {

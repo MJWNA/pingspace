@@ -5,6 +5,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-11-09
+
+### Changed
+
+- Spurts carry far more volume than drips: a bigger glob, a rope of medium globs that fuses into a thick stream, and a spray of 5 to 8 droplets. Big splats get more and longer drips, and more goo can be on screen at once.
+
 ## [1.2.0] - 2026-11-09
 
 ### Added
@@ -51,7 +57,8 @@ First release of PingSpace, a rework of [Peak2548/ow-server-switcher](https://gi
 - Selecting Australia in the original tool blocked some Australian servers, because its Singapore (`34.124.0.0/16`) and Netherlands (`37.244.0.0/16`) ranges contain Sydney ranges. Australian ranges are now subtracted from every block list.
 - Rules from the original tool applied to every program on the PC. They are now limited to Overwatch.exe, and rules left behind by the original tool are cleaned up.
 
-[Unreleased]: https://github.com/MJWNA/pingspace/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/MJWNA/pingspace/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/MJWNA/pingspace/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/MJWNA/pingspace/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/MJWNA/pingspace/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/MJWNA/pingspace/compare/v1.0.0...v1.1.0
