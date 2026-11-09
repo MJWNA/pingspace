@@ -64,7 +64,7 @@ jobs:
           import os, re
           version = os.environ["GITHUB_REF_NAME"].lstrip("v")
           text = open("CHANGELOG.md", encoding="utf-8").read()
-          m = re.search(r"^## \[" + re.escape(version) + r"\].*?\n(.*?)(?=^## \[|\Z)", text, re.S | re.M)
+          m = re.search(r"^## \[" + re.escape(version) + r"\].*?\n(.*?)(?=^## \[|^\[[^\]]+\]: |\Z)", text, re.S | re.M)
           if not m:
               raise SystemExit("No CHANGELOG.md section for " + version)
           notes = m.group(1).strip()
