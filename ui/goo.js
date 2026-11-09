@@ -1,8 +1,9 @@
-/* PingSpace goo: a blob hangs off the sausage cursor's tip, swells when the pointer
- * slows, drops, and splats on whatever is underneath, including the pin-ups of
- * Ronnie (it follows their exact outline and sticks to them as they move).
- * Purely visual: the canvas is click-through, splats fade, desktop only, and it
- * switches off under reduced motion. Shared by the app (ui/) and the install guide.
+/* PingSpace goo: the sausage cursor sprays. Big, frequent bursts of white goo fly out of
+ * its tip in every direction, with dripping in between, and land on whatever is
+ * underneath, including the pin-ups of Ronnie (it follows their exact outline and
+ * sticks to them as they move). Purely visual: the canvas is click-through, splats
+ * fade, desktop only, and it switches off under reduced motion. Shared by the app
+ * (ui/) and the install guide.
  *
  * Page config (optional), set before this script loads:
  *   window.GOO_CONFIG = { surfaces: 'css selector of things it can land on', z: 40 }
@@ -15,7 +16,8 @@
   var cfg = window.GOO_CONFIG || {};
   var SURF = cfg.surfaces || 'p,li,img,button,h1,h2,label,ol,ul,footer';
   var COLOR = '#ecebe1', GLOSS = '#ffffff';
-  var TIP_X = 6, TIP_Y = 8;   // where the drip leaves the sausage cursor, relative to its click point
+  var TIP_X = 6, TIP_Y = 8;            // where the goo leaves the sausage cursor, relative to its click point
+  var MAX_DROPS = 260, MAX_SPLATS = 180;
 
   // canvas + the goo filter (blur then sharpen the alpha = blobs that merge like slime)
   var NS = 'http://www.w3.org/2000/svg';
@@ -35,8 +37,6 @@
   var hang = { x: 0, y: 0, vx: 0, vy: 0, m: 0.1 };
   var drops = [], puddles = [];
   window.__goo = { drops: drops, puddles: puddles, spurts: 0 };
-  // rhythm: bursts of 2-4 spurts a beat apart, each weaker than the last, then a few seconds of dripping
-  var nextBurst = 0, burstLeft = 0, nextSpurt = 0, power = 1;
   function rnd(a, b) { return a + Math.random() * (b - a); }
   function size() {
     var d = window.devicePixelRatio || 1;
@@ -79,30 +79,39 @@
     return { u: (dx * F.vy - dy * F.vx) / det, v: (F.ux * dy - F.uy * dx) / det };
   }
   function toScreen(F, u, v) { return { x: F.ox + u * F.ux + v * F.vx, y: F.oy + u * F.uy + v * F.vy }; }
-  function visible(pic, x, y) {
-    if (!pic.isConnected) return false;
-    var off = pic.closest('.bum'); if (off && !off.classList.contains('on')) return false;
-    var clip = pic.closest('.lurk');   // lurkers are mostly hidden behind their box
-    if (clip) { var r = clip.getBoundingClientRect(); if (x < r.left || x > r.right || y < r.top || y > r.bottom) return false; }
-    return true;
+  function inside(r, x, y) { return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom; }
+
+  // every visible pin-up, measured once per frame (hundreds of drops share the measurements)
+  var pinCache = null, pinMap = new Map();
+  function pins() {
+    if (pinCache) return pinCache;
+    pinCache = []; pinMap = new Map();
+    var list = document.querySelectorAll('.pinhit');
+    for (var i = 0; i < list.length; i++) {
+      var pic = list[i];
+      var off = pic.closest('.bum'); if (off && !off.classList.contains('on')) continue;
+      var img = pic.querySelector('img'), M = img && mask(img); if (!M) continue;
+      var F = frameOf(pic); if (!F) continue;
+      var clip = pic.closest('.lurk');   // lurkers are mostly hidden behind their box
+      var e = { pic: pic, F: F, M: M, box: pic.getBoundingClientRect(), clip: clip ? clip.getBoundingClientRect() : null };
+      pinCache.push(e); pinMap.set(pic, e);
+    }
+    return pinCache;
   }
-  function solid(pic, F, x, y) {
-    var img = pic.querySelector('img'); if (!img) return null;
-    var M = mask(img); if (!M) return null;
-    var L = toLocal(F, x, y); if (!L || L.u < 0 || L.v < 0 || L.u >= F.w || L.v >= F.h) return null;
-    var px = (L.u / F.w * M.w) | 0, py = (L.v / F.h * M.h) | 0;
+  function solid(e, x, y) {
+    var L = toLocal(e.F, x, y); if (!L || L.u < 0 || L.v < 0 || L.u >= e.F.w || L.v >= e.F.h) return null;
+    var M = e.M, px = (L.u / e.F.w * M.w) | 0, py = (L.v / e.F.h * M.h) | 0;
     return M.a[(py * M.w + px) * 4 + 3] > 110 ? L : null;
   }
   // is there a bit of ronnie at (x, y)? returns where on him it is, nudged up to his top edge
   function pinupAt(x, y) {
-    var pics = document.querySelectorAll('.pinhit');
-    for (var i = pics.length - 1; i >= 0; i--) {
-      var pic = pics[i];
-      if (!visible(pic, x, y)) continue;
-      var F = frameOf(pic); if (!F) continue;
-      var L = solid(pic, F, x, y); if (!L) continue;
-      for (var k = 1; k < 18 && solid(pic, F, x, y - k); k++) L = toLocal(F, x, y - k);
-      return { pic: pic, u: L.u, v: L.v };
+    var P = pins();
+    for (var i = P.length - 1; i >= 0; i--) {
+      var e = P[i];
+      if (!inside(e.box, x, y) || (e.clip && !inside(e.clip, x, y))) continue;
+      var L = solid(e, x, y); if (!L) continue;
+      for (var k = 1; k < 18; k++) { var up = solid(e, x, y - k); if (!up) break; L = up; }
+      return { pic: e.pic, u: L.u, v: L.v };
     }
     return null;
   }
@@ -115,8 +124,8 @@
     return el.closest(SURF);
   }
   function landingY(x, y) {
-    var start = blockAt(x, y), floor = innerHeight - 3;
-    for (var yy = y + 8; yy < floor; yy += 5) {
+    var start = blockAt(x, y), floor = innerHeight - 3, limit = Math.min(floor, y + 700);
+    for (var yy = y + 8; yy < limit; yy += 7) {
       var b = blockAt(x, yy);
       if (b && b !== start && !b.contains(start)) return Math.max(y + 8, b.getBoundingClientRect().top);
     }
@@ -124,24 +133,26 @@
   }
   function drop(x, y, r, vx, vy) {   // viewport coords in; drops live in page coords
     drops.push({ x: x, y: y + scrollY, r: r, vx: vx, vy: vy, land: vy < 0 ? null : landingY(x, y) + scrollY });
-    if (drops.length > 140) drops.shift();
+    if (drops.length > MAX_DROPS) drops.shift();
   }
-  // a spurt: a big glob, a rope of medium globs behind it on the same arc (the goo filter
-  // fuses them into one thick stream) and a spray of droplets. far more volume than a drip,
-  // and weaker each time within a burst (p)
+  // a spurt: a big glob, a rope of globs behind it on the same arc (the goo filter fuses them
+  // into one thick stream) and a wide spray of droplets. weaker each time within a burst (p)
   function spurt(x, y, p) {
-    var ang = -2.2 + rnd(-0.4, 0.4), sp = rnd(10, 14) * p, size = 0.65 + 0.35 * p;
-    drop(x, y, rnd(9, 12.5) * size, Math.cos(ang) * sp, Math.sin(ang) * sp);
-    for (var j = 1, n = 3 + (Math.random() * 2 | 0); j <= n; j++) {
-      var f = 1 - j * 0.11, a1 = ang + rnd(-0.06, 0.06);
-      drop(x, y, rnd(5.5, 8) * size * (1 - j * 0.08), Math.cos(a1) * sp * f, Math.sin(a1) * sp * f);
+    var ang = -2.2 + rnd(-0.75, 0.75), sp = rnd(13, 19) * p, size = 0.7 + 0.3 * p;
+    drop(x, y, rnd(11, 15) * size, Math.cos(ang) * sp, Math.sin(ang) * sp);
+    for (var j = 1, n = 4 + (Math.random() * 3 | 0); j <= n; j++) {
+      var f = 1 - j * 0.09, a1 = ang + rnd(-0.07, 0.07);
+      drop(x, y, rnd(6.5, 9.5) * size * (1 - j * 0.07), Math.cos(a1) * sp * f, Math.sin(a1) * sp * f);
     }
-    for (var i = 5 + (Math.random() * 4 | 0); i > 0; i--) {
-      var a2 = ang + rnd(-0.45, 0.45), s2 = sp * rnd(0.5, 0.95);
-      drop(x, y, rnd(2.4, 4.6) * size, Math.cos(a2) * s2, Math.sin(a2) * s2);
+    for (var i = 8 + (Math.random() * 7 | 0); i > 0; i--) {
+      var a2 = ang + rnd(-0.85, 0.85), s2 = sp * rnd(0.4, 1.08);
+      drop(x, y, rnd(2.4, 5) * size, Math.cos(a2) * s2, Math.sin(a2) * s2);
     }
     window.__goo.spurts++;
   }
+  // rhythm: frequent bursts of 3-7 fast spurts, each a little weaker, then a short dribble
+  var nextBurst = 0, burstLeft = 0, nextSpurt = 0, power = 1;
+
   function drips(r) {
     var big = r > 7, out = [], n = big ? 2 + (Math.random() * 3 | 0) : (Math.random() < 0.75 ? 1 + (Math.random() * 2 | 0) : 0);
     for (var i = 0; i < n; i++) out.push({ dx: rnd(-r * 1.4, r * 1.4), len: 0, max: rnd(10, 38) * (big ? 1.6 : 1), sp: rnd(0.08, 0.22) });
@@ -151,7 +162,7 @@
     var p = { x: d.x, y: d.land, r: d.r, t: 0, life: rnd(4000, 8000), drips: drips(d.r) };
     if (on) { p.pic = on.pic; p.u = on.u; p.v = on.v; p.life += 2500; }   // stuck to ronnie, sticks around longer
     puddles.push(p);
-    if (puddles.length > 110) puddles.shift();
+    if (puddles.length > MAX_SPLATS) puddles.shift();
   }
   function blob(x, y, r) { if (r > 0.3) { ctx.beginPath(); ctx.arc(x, y, r, 0, 6.2832); ctx.fill(); } }
   function glossy(x, y, r) {
@@ -172,26 +183,27 @@
   var last = 0;
   function frame(now) {
     var dt = Math.min(48, now - (last || now)) / 16.7; last = now;
+    pinCache = null;
     ctx.clearRect(0, 0, innerWidth, innerHeight);
     ctx.fillStyle = COLOR;
     var sy = scrollY;
 
-    // the blob hanging off the sausage
+    // the sausage: spurts in bursts, dribbles in between
     if (mx > -900) {
       speed *= Math.pow(0.9, dt);
       var slow = speed < 3;
-      hang.m = Math.min(1, hang.m + (slow ? 0.022 : 0.007) * dt);
       var ox = mx + TIP_X, oy = my + TIP_Y;
       if (now - lastMove < 6000) {
-        if (!nextBurst) nextBurst = now + rnd(1500, 3500);
-        if (!burstLeft && now >= nextBurst) { burstLeft = 2 + (Math.random() * 3 | 0); power = 1; nextSpurt = now; }
+        if (!nextBurst) nextBurst = now + rnd(400, 1200);
+        if (!burstLeft && now >= nextBurst) { burstLeft = 3 + (Math.random() * 5 | 0); power = 1; nextSpurt = now; }
         if (burstLeft && now >= nextSpurt) {
-          spurt(ox, oy, power); burstLeft--; power *= rnd(0.62, 0.8);
+          spurt(ox, oy, power); burstLeft--; power *= rnd(0.75, 0.9);
           hang.m = 0.05; hang.y = oy + 4;                    // spent, starts dripping again from empty
-          nextSpurt = now + rnd(170, 340);
-          if (!burstLeft) nextBurst = now + rnd(2800, 6500);
+          nextSpurt = now + rnd(90, 200);
+          if (!burstLeft) nextBurst = now + rnd(700, 2200);
         }
       }
+      hang.m = Math.min(1, hang.m + (slow ? 0.022 : 0.007) * dt);
       var tx = ox, ty = oy + 6 + hang.m * 30;
       hang.vx = (hang.vx + (tx - hang.x) * 0.12 * dt) * Math.pow(0.8, dt);
       hang.vy = (hang.vy + ((ty - hang.y) * 0.12 + 0.35) * dt) * Math.pow(0.8, dt);
@@ -209,7 +221,7 @@
       glossy(hang.x, hang.y, R);
     }
 
-    // falling drops: land on ronnie if they hit him on the way down, else on whatever is below
+    // flying and falling goo: land on ronnie if it hits him on the way down, else on whatever is below
     for (var k = drops.length - 1; k >= 0; k--) {
       var d = drops[k];
       d.vy += 0.5 * dt; d.vx *= Math.pow(0.985, dt); d.x += d.vx * dt; d.y += d.vy * dt;
@@ -226,16 +238,17 @@
     }
 
     // splats with drips running down, then fading. the ones on ronnie move with him
+    if (puddles.length) pins();
     for (var p = puddles.length - 1; p >= 0; p--) {
       var q = puddles[p]; q.t += 16.7 * dt;
       var f = q.t < 120 ? q.t / 120 : (q.t > q.life ? 1 - (q.t - q.life) / 1500 : 1);
       if (f <= 0) { puddles.splice(p, 1); continue; }
       var x, yy;
       if (q.pic) {
-        if (!q.pic.isConnected) { puddles.splice(p, 1); continue; }
-        var F = frameOf(q.pic); if (!F) continue;
-        var s = toScreen(F, q.u, q.v); x = s.x; yy = s.y;
-        if (!visible(q.pic, x, yy)) continue;
+        var e = pinMap.get(q.pic);
+        if (!e) { if (!q.pic.isConnected) puddles.splice(p, 1); continue; }   // gone, or hidden for now
+        var s = toScreen(e.F, q.u, q.v); x = s.x; yy = s.y;
+        if (e.clip && !inside(e.clip, x, yy)) continue;
       } else {
         x = q.x; yy = q.y - sy;
       }
@@ -257,5 +270,5 @@
     requestAnimationFrame(frame);
   }
   function start() { if (!running) { running = true; last = 0; requestAnimationFrame(frame); } }
-  window.Goo = { drop: drop, pinupAt: pinupAt, start: start };
+  window.Goo = { drop: drop, spurt: spurt, pinupAt: pinupAt, start: start };
 })();

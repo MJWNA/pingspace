@@ -41,6 +41,8 @@ Overwatch's matchmaker regularly places Oceanic players in Singapore, Tokyo, Seo
 - **Set and forget.** Rules persist across restarts. Open the app again only to unblock.
 - **Single-file exe** built and self-tested by CI, published with a SHA-256 checksum.
 - **A MySpace profile.** Top 8 friends are server regions, the mood is your block status, and an original 8-bit lullaby plays with glitch stutters synced to the visuals. Pause sticks.
+- **PingSpace Studio.** An 8-bit beat lab behind the music box: FL-style channel rack, piano roll, keyboard play and record, detailed chiptune synths and drums, patterns and song mode, a bit-crusher, and export to WAV. Every sound is synthesised live; there are no samples.
+- **Y2K chaos.** A sausage cursor that sprays goo onto everything (including the pin-ups, by their exact outline), random neon lightning, spinning starburst stickers, sparkles and shooting stars. All click-through, and off under reduced motion.
 
 ## Quick start
 
@@ -115,6 +117,8 @@ python main.py --self-test                # bundled files + range maths
 | `ranges.py` | Loads Google and curated ranges, subtracts Australia, collapses CIDRs |
 | `firewall.py` | Builds the PowerShell scripts, runs them, finds Overwatch.exe |
 | `ui/index.html` | The whole interface: HTML, CSS, WebAudio chiptune, no external requests |
+| `ui/studio.html` | PingSpace Studio: step sequencer, piano roll, WebAudio synth engine, WAV export |
+| `ui/goo.js`, `ui/y2k.js` | Shared effects for the app and the guide: cursor goo, lightning, starbursts |
 | `ips.json` | Curated per-region ranges (from the original project) |
 | `data/gcp_ranges_snapshot.json` | Offline fallback copy of Google's `cloud.json` |
 | `tests/` | Unit tests plus the Windows Firewall integration test |

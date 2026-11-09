@@ -14,6 +14,7 @@ Flags:
 import ctypes
 import json
 import os
+import re
 import sys
 import threading
 import traceback
@@ -33,6 +34,19 @@ WEBVIEW2_URL = "https://developer.microsoft.com/microsoft-edge/webview2/"
 # pywebview only accepts wildcard filters: "Description (*.ext)". A literal file
 # name like "(Overwatch.exe)" raises and the picker never opens.
 FILE_TYPES = ("Programs (*.exe)",)
+WAV_TYPES = ("WAV audio (*.wav)",)
+SONGS_DIR = os.path.join(CONFIG_DIR, "songs")
+MAX_SONG_BYTES = 2_000_000
+
+
+def clean_name(name):
+    """A song name that is safe as a file name: letters, numbers, spaces, - and _ only."""
+    return re.sub(r"[^\w \-]", "", str(name or ""), flags=re.UNICODE).strip()[:40]
+
+
+def song_path(name):
+    safe = clean_name(name)
+    return os.path.join(SONGS_DIR, safe + ".json") if safe else None
 
 
 # --- Admin ---------------------------------------------------------------
@@ -198,6 +212,71 @@ class Api:
         save_config(self._cfg)
         return True
 
+    # --- PingSpace Studio: songs live as JSON files in %APPDATA%\PingSpace\songs ---
+
+    def list_songs(self):
+        try:
+            return sorted(f[:-5] for f in os.listdir(SONGS_DIR) if f.endswith(".json"))
+        except OSError:
+            return []
+
+    def load_song(self, name):
+        path = song_path(name)
+        if not path or not os.path.exists(path):
+            return None
+        with open(path, "r", encoding="utf-8") as f:
+            return f.read()
+
+    def save_song(self, name, data):
+        path = song_path(name)
+        if not path:
+            return {"ok": False, "message": "give it a name with some letters or numbers in it"}
+        if not isinstance(data, str) or len(data) > MAX_SONG_BYTES:
+            return {"ok": False, "message": "that song is too big to save"}
+        try:
+            song = json.loads(data)
+            if not isinstance(song, dict) or "patterns" not in song or "channels" not in song:
+                raise ValueError("not a PingSpace song")
+            os.makedirs(SONGS_DIR, exist_ok=True)
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(data)
+        except (ValueError, OSError) as e:
+            return {"ok": False, "message": "couldnt save: %s" % e}
+        return {"ok": True, "name": os.path.basename(path)[:-5]}
+
+    def delete_song(self, name):
+        path = song_path(name)
+        if path and os.path.exists(path):
+            os.remove(path)
+            return True
+        return False
+
+    def save_wav(self, b64, filename="beat.wav"):
+        """Ask where to save an exported beat, then write it. Returns {ok, path} or {ok: False, ...}."""
+        import base64
+        try:
+            data = base64.b64decode(b64, validate=True)
+        except (ValueError, TypeError):
+            return {"ok": False, "message": "the export came out broken"}
+        if data[:4] != b"RIFF" or data[8:12] != b"WAVE":
+            return {"ok": False, "message": "the export came out broken"}
+        safe = clean_name(os.path.splitext(filename or "")[0]) or "beat"
+        if not self._window:
+            return {"ok": False, "message": "no window to ask where to save"}
+        import webview
+        dialog = getattr(getattr(webview, "FileDialog", None), "SAVE", None)
+        if dialog is None:
+            dialog = webview.SAVE_DIALOG  # pywebview < 5
+        result = self._window.create_file_dialog(dialog, save_filename=safe + ".wav", file_types=WAV_TYPES)
+        if not result:
+            return {"ok": False, "cancelled": True, "message": "export cancelled"}
+        path = result[0] if isinstance(result, (list, tuple)) else result
+        if not path.lower().endswith(".wav"):
+            path += ".wav"
+        with open(path, "wb") as f:
+            f.write(data)
+        return {"ok": True, "path": path}
+
 
 # --- Entry points ------------------------------------------------------------------
 
@@ -205,7 +284,7 @@ def self_test():
     """Checks the packaged app has everything it needs. Exit code 0 means OK."""
     problems = []
     for parts in (("ui", "index.html"), ("ui", "me.jpg"), ("ui", "pinup1.webp"), ("ui", "pinup2.webp"),
-                  ("ui", "goo.js"), ("ui", "sausage-cursor.png"),
+                  ("ui", "goo.js"), ("ui", "sausage-cursor.png"), ("ui", "y2k.js"), ("ui", "studio.html"),
                   ("ui", "sfx", "boing.mp3"), ("ui", "sfx", "ooh.mp3"), ("ui", "sfx", "ohmy.mp3"), ("ui", "sfx", "whistle.mp3"),
                   ("ips.json",), ("data", "gcp_ranges_snapshot.json")):
         if not os.path.exists(ranges.resource_path(*parts)):

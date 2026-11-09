@@ -232,6 +232,13 @@ hr.rb{border:0;height:3px;background:linear-gradient(90deg,red,orange,yellow,lim
 .finger{position:fixed;z-index:88;pointer-events:none;font-size:44px;line-height:1;color:#fff;-webkit-text-stroke:1.5px #000;animation:boopf .5s ease-out forwards}
 @keyframes boopf{0%{transform:translate(-50%,-150%) rotate(90deg)}40%{transform:translate(-50%,-85%) rotate(90deg) scale(.9)}100%{transform:translate(-50%,-140%) rotate(90deg);opacity:0}}
 
+/* the way into PingSpace Studio, in the music box */
+.studiolink{display:block;margin-top:8px;padding:6px 4px;text-align:center;color:#000;text-decoration:none;
+  font:bold 12px "Comic Sans MS",cursive;background:linear-gradient(90deg,#39ff14,#00f0ff,#ff2bd6,#fff200,#39ff14);
+  background-size:300% 100%;border:2px outset #b8ffb0;animation:glit 3s linear infinite}
+.studiolink small{display:block;font:10px Verdana;color:#200030}
+.studiolink:hover{color:#000;text-decoration:none;animation:glit 3s linear infinite, wiggle .3s linear infinite}
+
 /* synced to the stutter in the song */
 body.glitchnow .glitch{animation:shake .3s steps(3) 1;filter:invert(1) hue-rotate(120deg)}
 body.glitchnow #name{transform:skewX(-20deg) translateX(6px)}
@@ -334,7 +341,7 @@ body.glitchnow #bg{filter:hue-rotate(180deg) saturate(3) contrast(2)}
             <button type="button" id="play">&#9654; play</button>
             <span>vol</span><input type="range" id="vol" min="0" max="100" value="45">
           </div>
-          <div style="margin-top:6px;font-size:10px;color:#9b7aad">add 2 ur profile | download</div>
+          <a href="studio.html" class="studiolink">&#9835; make ur own 8-bit beats &rarr;<small>open PingSpace Studio</small></a>
         </div>
       </div>
 
@@ -930,5 +937,7 @@ connect().then(function (a) {
 </script>
 <script>window.GOO_CONFIG = { surfaces: '.box,.hdr,button,.friend,table,td,img,marquee,p,input,.viz,#ext,#topbar,#footer', z: 86 };</script>
 <script src="goo.js"></script>
+<script>window.Y2K_CONFIG = { backZ: -1, frontZ: 54 };</script>
+<script src="y2k.js"></script>
 </body>
 </html>

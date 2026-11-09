@@ -74,8 +74,35 @@ class ApiDryRunTests(unittest.TestCase):
             from webview.util import parse_file_type
         except ImportError:
             self.skipTest("pywebview not installed")
-        for f in main.FILE_TYPES:
+        for f in main.FILE_TYPES + main.WAV_TYPES:
             parse_file_type(f)  # raises ValueError for a filter pywebview rejects
+
+    def test_studio_songs_round_trip(self):
+        with mock.patch.object(main, "SONGS_DIR", os.path.join(self.tmp, "songs")):
+            song = '{"name": "x", "channels": [], "patterns": {"A": []}}'
+            r = self.api.save_song("My Beat!!", song)
+            self.assertTrue(r["ok"], r)
+            self.assertEqual(r["name"], "My Beat")
+            self.assertEqual(self.api.list_songs(), ["My Beat"])
+            self.assertEqual(self.api.load_song("My Beat"), song)
+            self.assertTrue(self.api.delete_song("My Beat"))
+            self.assertEqual(self.api.list_songs(), [])
+
+    def test_studio_song_names_cant_escape_the_folder(self):
+        songs = os.path.join(self.tmp, "songs")
+        with mock.patch.object(main, "SONGS_DIR", songs):
+            r = self.api.save_song("../../../evil", '{"channels": [], "patterns": {}}')
+            self.assertTrue(r["ok"])
+            self.assertEqual(os.listdir(songs), ["evil.json"])
+            self.assertFalse(self.api.save_song("../..", "{}")["ok"])           # nothing left after cleaning
+            self.assertIsNone(self.api.load_song("../../etc/passwd"))
+
+    def test_studio_rejects_junk(self):
+        with mock.patch.object(main, "SONGS_DIR", os.path.join(self.tmp, "songs")):
+            self.assertFalse(self.api.save_song("x", "not json")["ok"])
+            self.assertFalse(self.api.save_song("x", '{"just": "a dict"}')["ok"])
+            self.assertFalse(self.api.save_song("x", "x" * (main.MAX_SONG_BYTES + 1))["ok"])
+        self.assertFalse(self.api.save_wav("bm90IGEgd2F2", "x.wav")["ok"])      # base64 of "not a wav"
 
     def test_browse_without_window_returns_empty(self):
         self.assertEqual(self.api.browse(), "")
@@ -95,8 +122,16 @@ class PageTests(unittest.TestCase):
 
     def test_page_is_fully_offline(self):
         # no fonts, scripts or images from the internet: the app must work offline
-        self.assertEqual(re.findall(r"""(?:src|href)\s*=\s*["']https?://""", self.html), [])
-        self.assertNotIn("@import", self.html)
+        for name in ("index.html", "studio.html", "goo.js", "y2k.js"):
+            with open(os.path.join(ROOT, "ui", name), encoding="utf-8") as f:
+                text = f.read()
+            self.assertEqual(re.findall(r"""(?:src|href)\s*=\s*["']https?://""", text), [], name)
+            self.assertNotIn("@import", text, name)
+
+    def test_profile_links_to_studio(self):
+        self.assertIn('href="studio.html"', self.html)
+        with open(os.path.join(ROOT, "ui", "studio.html"), encoding="utf-8") as f:
+            self.assertIn('href="index.html"', f.read())
 
     def test_sausage_cursor_beats_pywebview_injected_css(self):
         # pywebview appends "body {...; cursor: default;}" when text selection is off. Our rule
@@ -111,7 +146,7 @@ class PageTests(unittest.TestCase):
         self.assertNotRegex(self.html, r"(?m)^\s*body\{[^}]*cursor:")
 
     def test_demo_copy_matches_app(self):
-        for name in ("index.html", "me.jpg", "pinup1.webp", "pinup2.webp", "goo.js", "sausage-cursor.png",
+        for name in ("index.html", "me.jpg", "pinup1.webp", "pinup2.webp", "goo.js", "sausage-cursor.png", "y2k.js", "studio.html",
                      "sfx/boing.mp3", "sfx/ooh.mp3", "sfx/ohmy.mp3", "sfx/whistle.mp3"):
             self.assertTrue(filecmp.cmp(os.path.join(ROOT, "ui", name), os.path.join(ROOT, "docs", "demo", name), shallow=False),
                             "docs/demo/%s is out of date: copy ui/%s over it" % (name, name))

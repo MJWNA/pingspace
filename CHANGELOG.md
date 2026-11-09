@@ -5,6 +5,23 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-11-10
+
+### Added
+
+- **PingSpace Studio** (`ui/studio.html`), an 8-bit beat lab opened from the profile's music box:
+  - FL Studio-style channel rack with 10 channels (Kick, 808, Snare, Clap, Hat, Open Hat, Perc, Lead, Bass, Keys), 16 or 32 steps, mute, solo, volume and a trigger light per channel.
+  - Piano roll for every channel across six octaves: click to add, drag to lengthen, drag to move, drag the edge to resize, right-click or double-click to delete, clickable piano keys.
+  - Play notes from the computer keyboard (Z to M and Q to U), with REC to record into the loop while it plays.
+  - Synth engine with three pulse widths, triangle, saw and noise, ADSR, low-pass filter and resonance, vibrato, glide and detune. Drums have tune, decay, punch, snap, tone and drive, and the 808 is melodic.
+  - Patterns A to D with copy and paste, song mode that plays a chain of up to 8 patterns, BPM, swing, master volume, a 3 to 16 bit CRUNCH bit-crusher and tempo-synced echo.
+  - RANDOM BEAT, two demo songs (lo-ping lullaby and ping pong panic), autosave, saved songs in `%APPDATA%\PingSpace\songs`, and EXPORT .WAV (rendered offline, saved through a save dialog).
+- Y2K effects (`ui/y2k.js`) on the app and the install guide: random neon lightning bolts with forks and a soft flash, spinning NEW!/HOT!/OMG!! starbursts, twinkling sparkles and shooting stars. Flashes stay well under the photosensitivity limit, and it all switches off under reduced motion.
+
+### Changed
+
+- The sausage sprays far more: bursts of 3 to 7 faster, bigger spurts every second or two, wider spray, more goo on screen at once. Pin-up hit testing is now measured once per frame so hundreds of drops stay smooth.
+
 ## [1.2.2] - 2026-11-10
 
 ### Fixed
@@ -63,7 +80,8 @@ First release of PingSpace, a rework of [Peak2548/ow-server-switcher](https://gi
 - Selecting Australia in the original tool blocked some Australian servers, because its Singapore (`34.124.0.0/16`) and Netherlands (`37.244.0.0/16`) ranges contain Sydney ranges. Australian ranges are now subtracted from every block list.
 - Rules from the original tool applied to every program on the PC. They are now limited to Overwatch.exe, and rules left behind by the original tool are cleaned up.
 
-[Unreleased]: https://github.com/MJWNA/pingspace/compare/v1.2.2...HEAD
+[Unreleased]: https://github.com/MJWNA/pingspace/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/MJWNA/pingspace/compare/v1.2.2...v1.3.0
 [1.2.2]: https://github.com/MJWNA/pingspace/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/MJWNA/pingspace/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/MJWNA/pingspace/compare/v1.1.1...v1.2.0
