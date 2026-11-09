@@ -1,0 +1,733 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta charset="utf-8">
+<title>~*PingSpace*~ | a place 4 low ping</title>
+<style type="text/css">
+/* ~*~*~ layout by ~*RoNNiE*~ ~*~*~ dont steal my layout!!1 ~*~*~ */
+:root{
+  --pink:#ff2bd6; --hot:#ff0090; --purple:#7a00ff; --lime:#39ff14;
+  --cyan:#00f0ff; --yellow:#fff200; --ink:#0b0013; --panel:#12001f;
+}
+html,body{margin:0;padding:0}
+body{
+  background:#000;
+  color:#f6d9ff;
+  font:11px Verdana, Tahoma, Arial, sans-serif;
+  cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M2 2 L2 19 L7 14 L11 22 L14 21 L10 13 L17 13 Z' fill='%23ff2bd6' stroke='%23000' stroke-width='1.5'/%3E%3Ccircle cx='19' cy='5' r='2' fill='%23fff200'/%3E%3C/svg%3E") 2 2, auto;
+  overflow-x:hidden;
+}
+button,input,a,.friend,label{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Ctext x='1' y='20' font-size='20'%3E%E2%99%A5%3C/text%3E%3C/svg%3E") 8 8, pointer}
+
+/* the obnoxious tiled me background */
+#bg{position:fixed;inset:-120px;z-index:-2;
+  background:url(me.jpg) repeat;background-size:120px 160px;
+  animation:bgscroll 18s linear infinite, bghue 7s linear infinite;opacity:.9}
+#bg2{position:fixed;inset:0;z-index:-1;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,43,214,.25), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(122,0,255,.35), transparent 45%),
+    repeating-linear-gradient(0deg, rgba(0,0,0,.35) 0 2px, transparent 2px 4px);
+}
+@keyframes bgscroll{to{transform:translate(120px,160px)}}
+@keyframes bghue{to{filter:hue-rotate(360deg) saturate(1.6)}}
+
+a{color:var(--lime);text-decoration:none;font-weight:bold}
+a:hover{color:var(--yellow);text-decoration:underline;animation:blink .4s steps(2,start) infinite}
+
+#wrap{width:880px;margin:0 auto;padding-bottom:40px}
+
+/* ~ top bar ~ */
+#topbar{background:linear-gradient(#2a0050,#0b0013);border-bottom:3px double var(--pink);padding:8px 12px 4px}
+#logo{font:bold 30px "Arial Black", Impact, sans-serif;letter-spacing:-1px;display:inline-block}
+#logo small{display:block;font:italic 11px Georgia, serif;color:#ffb3f0;letter-spacing:1px;-webkit-text-fill-color:#ffb3f0}
+#nav{background:var(--purple);margin:6px -12px -4px;padding:4px 12px;font-size:11px}
+#nav a{color:#fff;margin-right:4px}
+#nav span{color:#ffb3f0;margin-right:4px}
+#search{float:right;margin-top:6px;font-size:10px;color:#ffb3f0}
+#search input{font:10px Verdana;border:1px inset #999;width:120px;background:#fff;color:#000}
+#search button{font:bold 10px Verdana}
+
+marquee{display:block;background:#000;color:var(--yellow);font:bold 12px "Comic Sans MS", cursive;
+  border-top:1px dashed var(--pink);border-bottom:1px dashed var(--pink);padding:3px 0;text-shadow:0 0 6px var(--hot)}
+
+/* glitter text */
+.glitter{background:linear-gradient(90deg,#ff00cc,#fff,#00f0ff,#fff200,#ff00cc,#fff,#ff00cc);
+  background-size:400% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:glit 3s linear infinite;filter:drop-shadow(0 0 3px rgba(255,0,200,.9))}
+@keyframes glit{to{background-position:400% 0}}
+.blink{animation:blink 1s steps(2,start) infinite}
+@keyframes blink{to{visibility:hidden}}
+.rainbow{animation:rainbow 2s linear infinite}
+@keyframes rainbow{0%{color:#ff2bd6}25%{color:#fff200}50%{color:#39ff14}75%{color:#00f0ff}100%{color:#ff2bd6}}
+
+#cols{display:table;width:100%;border-spacing:10px;margin-top:4px}
+#left,#right{display:table-cell;vertical-align:top}
+#left{width:300px}
+
+.box{background:var(--panel);border:2px dashed var(--pink);margin-bottom:10px;box-shadow:4px 4px 0 #000}
+.hdr{background:var(--pink);color:#000;font:bold 11px Verdana;padding:3px 6px;text-transform:none}
+.hdr.blue{background:var(--purple);color:#fff}
+.in{padding:8px}
+
+/* profile name + pic */
+#name{font:bold 22px "Comic Sans MS", cursive;margin:4px 0 6px;text-align:center}
+#picrow{display:table;width:100%}
+#picrow > div{display:table-cell;vertical-align:top}
+
+/* ~*~ GLITCH ~*~ */
+.glitch{position:relative;width:150px;height:200px;overflow:hidden;border:3px solid var(--hot);
+  box-shadow:0 0 0 2px #000, 0 0 18px var(--hot);background:#000}
+.glitch img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.glitch .g1{mix-blend-mode:screen;opacity:.8;filter:hue-rotate(160deg) saturate(4);animation:g1 2.3s steps(1) infinite}
+.glitch .g2{mix-blend-mode:screen;opacity:.8;filter:hue-rotate(-100deg) saturate(4);animation:g2 1.7s steps(1) infinite}
+.glitch .base{animation:jolt 4s steps(1) infinite}
+.glitch:after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg, rgba(0,0,0,.35) 0 1px, transparent 1px 3px);
+  animation:roll 6s linear infinite}
+@keyframes roll{to{background-position:0 200px}}
+@keyframes g1{
+  0%{clip-path:inset(10% 0 80% 0);transform:translate(-6px,0)}
+  10%{clip-path:inset(60% 0 10% 0);transform:translate(5px,0)}
+  20%{clip-path:inset(30% 0 50% 0);transform:translate(-3px,0)}
+  30%{clip-path:inset(0 0 0 0);transform:translate(0,0);opacity:0}
+  70%{clip-path:inset(80% 0 5% 0);transform:translate(8px,0);opacity:.8}
+  80%{clip-path:inset(45% 0 40% 0);transform:translate(-9px,0)}
+  90%{clip-path:inset(0 0 0 0);opacity:0}
+}
+@keyframes g2{
+  0%{clip-path:inset(70% 0 15% 0);transform:translate(6px,0)}
+  15%{clip-path:inset(20% 0 65% 0);transform:translate(-7px,0)}
+  30%{clip-path:inset(0 0 0 0);opacity:0}
+  60%{clip-path:inset(40% 0 45% 0);transform:translate(4px,0);opacity:.8}
+  75%{clip-path:inset(5% 0 85% 0);transform:translate(-5px,0)}
+  85%{clip-path:inset(0 0 0 0);opacity:0}
+}
+@keyframes jolt{0%,92%,100%{transform:none;filter:none}93%{transform:translate(3px,-2px) skewX(6deg);filter:invert(1) hue-rotate(90deg)}95%{transform:translate(-4px,1px);filter:saturate(5)}97%{transform:none;filter:hue-rotate(200deg)}}
+
+.details{padding-left:10px;font-size:11px;line-height:1.5}
+.details b{color:#ffb3f0}
+#mood{color:var(--yellow)}
+.online{color:var(--lime);font-weight:bold}
+.online:before{content:"\25CF ";}
+
+/* contact box */
+.contact{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.contact button{font:bold 11px Verdana;color:var(--lime);background:#000;border:1px solid var(--purple);padding:6px 4px;text-align:left}
+.contact button:hover{background:var(--purple);color:#fff}
+.contact button:disabled{opacity:.4}
+.contact button i{font-style:normal;color:var(--pink);margin-right:4px}
+
+/* details table */
+table.det{width:100%;border-collapse:separate;border-spacing:2px;font-size:11px}
+table.det td{padding:3px 5px;vertical-align:top}
+table.det td.k{background:#2a0050;color:#ffb3f0;font-weight:bold;width:38%}
+table.det td.v{background:#1b0030}
+#pathbox{width:100%;box-sizing:border-box;font:10px "Courier New", monospace;background:#000;color:var(--lime);border:1px inset var(--purple);padding:3px}
+
+/* music player */
+.player .np{font:11px "Courier New", monospace;color:var(--cyan);overflow:hidden;white-space:nowrap}
+.viz{display:flex;gap:2px;align-items:flex-end;height:34px;margin:6px 0;background:#000;padding:3px;border:1px solid #333}
+.viz span{flex:1;background:linear-gradient(var(--hot),var(--yellow));height:10%;transition:height .08s}
+.pctl{display:flex;align-items:center;gap:6px}
+.pctl button{font:bold 11px Verdana;background:linear-gradient(#ddd,#999);border:2px outset #ccc;color:#000;padding:2px 8px}
+.pctl button:active{border-style:inset}
+.pctl input{flex:1;accent-color:var(--hot)}
+
+/* status / extended network */
+#ext{border:2px solid var(--lime);background:#001a00;padding:10px;text-align:center;font:bold 14px "Comic Sans MS", cursive}
+#ext .sub{display:block;font:11px Verdana;color:#b9ffb0;margin-top:4px}
+#ext.bad{border-color:var(--hot);background:#25000f}
+#ext.bad .sub{color:#ffb3d1}
+#pending{display:none;margin-top:6px;color:var(--yellow);font:bold 11px Verdana}
+
+/* top 8 */
+.top8{display:grid;grid-template-columns:repeat(4,1fr);gap:10px 8px;text-align:center}
+.friend{position:relative;user-select:none}
+.friend .av{width:96px;height:96px;object-fit:cover;object-position:50% 30%;border:2px solid #fff;display:block;margin:0 auto 3px;background:#000}
+.friend .fname{color:var(--lime);font-weight:bold;font-size:11px}
+.friend .tag{display:block;font-size:9px;color:#ffb3f0;height:12px}
+.friend.safe .av{border-color:var(--lime);box-shadow:0 0 10px var(--lime)}
+.friend.off .av{filter:grayscale(1) contrast(1.3) brightness(.6)!important}
+.friend .stamp{display:none;position:absolute;top:30px;left:50%;transform:translateX(-50%) rotate(-14deg);
+  font:bold 14px Impact, "Arial Black", sans-serif;color:#ff1a1a;border:3px solid #ff1a1a;padding:0 5px;background:rgba(0,0,0,.6);letter-spacing:1px}
+.friend.off .stamp{display:block;animation:stampin .25s ease-out}
+@keyframes stampin{from{transform:translateX(-50%) rotate(-14deg) scale(2.2);opacity:0}}
+.friend:not(.safe):hover .av{border-color:var(--yellow);transform:rotate(-2deg)}
+.friend.safe{cursor:not-allowed}
+
+/* big buttons */
+.bigbtns{display:flex;gap:10px;margin-top:4px}
+.big{flex:1;font:bold 15px "Comic Sans MS", cursive;padding:10px 6px;border:3px outset #ff8be6;color:#fff;
+  background:linear-gradient(#ff5ce1,#c4009a);text-shadow:1px 1px 0 #000;box-shadow:0 0 14px var(--hot)}
+.big:hover{animation:wiggle .3s linear infinite}
+.big:active{border-style:inset}
+.big.alt{background:linear-gradient(#333,#000);border-color:#777;box-shadow:none;font-size:13px}
+.big:disabled{opacity:.45;animation:none}
+@keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-1.5deg)}75%{transform:rotate(1.5deg)}}
+
+/* blog / log */
+#log{font:11px Verdana;max-height:150px;overflow:auto}
+#log div{padding:3px 0;border-bottom:1px dotted #4a1a6a}
+#log .t{color:#9b7aad}
+#log .err{color:#ff6b9a}
+#log .ok{color:#b9ffb0}
+
+/* comments */
+.cmt{display:table;width:100%;border-bottom:1px dotted #4a1a6a;padding:5px 0}
+.cmt > div{display:table-cell;vertical-align:top}
+.cmt .who{width:90px;max-width:90px;text-align:center;font-size:10px;word-break:break-all}
+.cmt .who img{width:60px;height:60px;object-fit:cover;object-position:50% 30%;border:1px solid #fff;display:block;margin:0 auto 2px}
+.cmt .what{padding-left:8px;font:12px "Comic Sans MS", cursive;color:#fff}
+.cmt .when{display:block;font:9px Verdana;color:#9b7aad;margin-bottom:3px}
+
+.construction{height:14px;background:repeating-linear-gradient(45deg,#fff200 0 10px,#000 10px 20px);
+  animation:slide 1s linear infinite;background-size:28px 28px;margin:6px 0}
+@keyframes slide{to{background-position:28px 0}}
+hr.rb{border:0;height:3px;background:linear-gradient(90deg,red,orange,yellow,lime,cyan,blue,violet,red);background-size:200% 100%;animation:glit 2s linear infinite}
+
+#footer{text-align:center;font-size:10px;color:#ffb3f0;margin-top:8px;background:rgba(0,0,0,.75);padding:8px}
+#counter{display:inline-block;background:#000;color:var(--lime);font:bold 14px "Courier New", monospace;border:2px inset #555;padding:1px 6px;letter-spacing:3px}
+
+/* bouncing head */
+#dvd{position:fixed;width:84px;height:84px;border-radius:50%;object-fit:cover;object-position:50% 25%;
+  border:3px solid var(--yellow);pointer-events:none;z-index:50;box-shadow:0 0 20px var(--hot);
+  animation:spin 3s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* synced to the stutter in the song */
+body.glitchnow .glitch{animation:shake .3s steps(3) 1;filter:invert(1) hue-rotate(120deg)}
+body.glitchnow #name{transform:skewX(-20deg) translateX(6px)}
+body.glitchnow #bg{filter:hue-rotate(180deg) saturate(3) contrast(2)}
+@keyframes shake{0%{transform:translate(-5px,2px)}50%{transform:translate(6px,-3px) skewX(10deg)}100%{transform:none}}
+
+.spark{position:fixed;pointer-events:none;z-index:60;font-size:14px;animation:fall .9s ease-out forwards}
+@keyframes fall{to{transform:translateY(40px) rotate(180deg) scale(.2);opacity:0}}
+
+/* loading + error */
+#busy{display:none;position:fixed;inset:0;z-index:80;background:rgba(10,0,20,.85);text-align:center;padding-top:200px}
+#busy .ld{font:bold 22px "Comic Sans MS", cursive}
+#busy .bar{width:300px;height:16px;margin:12px auto;border:2px inset #666;background:#000;overflow:hidden}
+#busy .bar i{display:block;height:100%;width:40%;background:repeating-linear-gradient(90deg,var(--hot) 0 12px,var(--yellow) 12px 24px);animation:load 1.2s linear infinite}
+@keyframes load{from{margin-left:-40%}to{margin-left:100%}}
+#oops{display:none;position:fixed;z-index:90;left:50%;top:120px;transform:translateX(-50%);width:440px;background:#fff;color:#000;border:3px solid #c00;box-shadow:8px 8px 0 #000;font:12px Verdana}
+#oops .h{background:#c00;color:#fff;font-weight:bold;padding:4px 8px}
+#oops pre{white-space:pre-wrap;font:11px "Courier New";background:#eee;border:1px solid #999;padding:6px;max-height:160px;overflow:auto}
+#oops .b{padding:10px}
+#oops button{font:bold 11px Verdana}
+#clicktoplay{display:none;position:fixed;bottom:12px;left:12px;z-index:70;background:#000;border:2px solid var(--yellow);padding:6px 10px;font:bold 12px "Comic Sans MS", cursive;color:var(--yellow)}
+#demo{display:none;background:var(--yellow);color:#000;text-align:center;font:bold 11px Verdana;padding:3px}
+</style>
+</head>
+<body>
+<div id="bg"></div><div id="bg2"></div>
+<img id="dvd" src="me.jpg" alt="">
+
+<div id="wrap">
+  <div id="topbar">
+    <div id="search">search: <input type="text" value="low ping"> <button type="button">Go</button></div>
+    <div id="logo"><span class="glitter">PingSpace</span><small>a place 4 low ping&trade;</small></div>
+    <div id="nav">
+      <a href="#me">Home</a><span>|</span><a href="#top8">Browse</a><span>|</span><a href="#blog">Blog</a><span>|</span><a href="#about">About Me</a><span>|</span><a href="#comments">Comments</a><span>|</span><a href="#music">Music</a><span>|</span><a href="#det">Settings</a>
+    </div>
+  </div>
+  <div id="demo">DEMO MODE: not connected 2 the firewall. nothing u click here changes anything</div>
+  <marquee scrollamount="5">~*~ welcome 2 my page ~*~ asia servers r NOT invited ~*~ 150 ping is a hate crime ~*~ sydney 4 lyfe &lt;3 ~*~ thx 4 the add ~*~ pc4pc ~*~ if u r reading this ur ping is 2 high and so r u ~*~ my firewall wears eyeliner ~*~ xoxo ~*~</marquee>
+
+  <div id="cols">
+    <!-- ~~~~~~~~~~ LEFT ~~~~~~~~~~ -->
+    <div id="left">
+      <div class="box" id="me">
+        <div class="in">
+          <div id="name" class="glitter">~*RoNNiE*~</div>
+          <div id="picrow">
+            <div>
+              <div class="glitch">
+                <img class="base" src="me.jpg" alt="ronnie in space">
+                <img class="g1" src="me.jpg" alt="">
+                <img class="g2" src="me.jpg" alt="">
+              </div>
+            </div>
+            <div class="details">
+              <i>"i only queue 4 sydney"</i><br><br>
+              <b>Mood:</b> <span id="mood">loading...</span><br>
+              <b>Ping:</b> <span id="ping">??ms</span><br>
+              <b>Location:</b> Oceania<br>
+              <b>Status:</b> Single<br>(player)<br><br>
+              <span class="online blink">Online Now!</span><br><br>
+              <b>Last Login:</b><br><span id="lastlogin"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="hdr blue">Contacting ~*RoNNiE*~</div>
+        <div class="in contact">
+          <button type="button" class="act-block"><i>&hearts;</i>Block Servers</button>
+          <button type="button" class="act-unblock"><i>&#10006;</i>Unblock All</button>
+          <button type="button" id="browse2"><i>&#9733;</i>Find Overwatch</button>
+          <button type="button" id="refresh"><i>&#8635;</i>Check Status</button>
+        </div>
+      </div>
+
+      <div class="box" id="det">
+        <div class="hdr">~*RoNNiE*~'s Details</div>
+        <div class="in">
+          <table class="det">
+            <tr><td class="k">Here for:</td><td class="v">Low ping, Sydney, winning</td></tr>
+            <tr><td class="k">Hometown:</td><td class="v">Sydney servers <span class="rainbow">&hearts;</span></td></tr>
+            <tr><td class="k">Body type:</td><td class="v">20ms</td></tr>
+            <tr><td class="k">Zodiac sign:</td><td class="v">UDP</td></tr>
+            <tr><td class="k">Overwatch.exe:</td><td class="v">
+              <input id="pathbox" type="text" placeholder="where is it?? click find" spellcheck="false">
+              <div style="margin-top:4px"><a href="#" id="browse">[ find it ]</a></div>
+            </td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="box player" id="music">
+        <div class="hdr blue">&#9835; ~*RoNNiE*~'s Music &#9835;</div>
+        <div class="in">
+          <div class="np"><marquee scrollamount="3">now playing: lo-ping lullaby (8-bit remix).mid ~ by ~*RoNNiE*~ ~ 4 everyone stuck on 300ms</marquee></div>
+          <div class="viz" id="viz"></div>
+          <div class="pctl">
+            <button type="button" id="play">&#9654; play</button>
+            <span>vol</span><input type="range" id="vol" min="0" max="100" value="45">
+          </div>
+          <div style="margin-top:6px;font-size:10px;color:#9b7aad">add 2 ur profile | download</div>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="hdr">~*RoNNiE*~'s Interests</div>
+        <div class="in">
+          <table class="det">
+            <tr><td class="k">General</td><td class="v">low ping, glitter, ghosting entire continents, eyeliner, crying in the shower 2 keygen music</td></tr>
+            <tr><td class="k">Music</td><td class="v">8-bit, sad chiptune, keygen music, anything that sounds like a gameboy crying</td></tr>
+            <tr><td class="k">Heroes</td><td class="v">Windows Firewall</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ~~~~~~~~~~ RIGHT ~~~~~~~~~~ -->
+    <div id="right">
+      <div id="ext" class="box bad">
+        <span id="statusline">checking ur firewall... plz wait</span>
+        <span class="sub" id="statussub">&nbsp;</span>
+        <div id="pending">(u changed ur top 8... hit the big pink button 2 save it)</div>
+      </div>
+
+      <div class="box" id="blog">
+        <div class="hdr">~*RoNNiE*~'s Latest Blog Entry [<a href="#blog" style="color:#000">Subscribe to this Blog</a>]</div>
+        <div class="in"><div id="log"></div></div>
+      </div>
+
+      <div class="box" id="about">
+        <div class="hdr blue">~*RoNNiE*~'s Blurbs</div>
+        <div class="in" style="line-height:1.55">
+          <b class="rainbow" style="font-size:13px">About me:</b><br>
+          so basically every time i queue overwatch from australia the game goes "hey wat if u played in singapore" and then i have 150 ping and every genji teleports around like hes got the shits and i die in real life :'(<br><br>
+          this page blocks the servers that hurt me. u pick who gets unfriended in my <b>top 8</b> below, then hit the big pink button.<br><br>
+          &#9733; it only blocks <b>Overwatch's</b> game traffic (UDP). discord, ur browser, battle.net login etc r totally fine<br>
+          &#9733; <b>Sydney + Melbourne r NEVER blocked</b>. they r my bffs<br>
+          &#9733; do it <b>b4 u queue</b>. if the game is already open, restart it<br>
+          &#9733; it stays on even after u close this, until u hit <b>unblock all</b><br>
+          &#9733; late at nite the aussie queue is small so u might wait longer. thats the price of love<br><br>
+          <b class="rainbow" style="font-size:13px">Who I'd like to meet:</b><br>
+          Sydney servers. 20ms. a match that finds b4 2am. u :)
+          <div class="construction"></div>
+        </div>
+      </div>
+
+      <div class="box" id="top8">
+        <div class="hdr">~*RoNNiE*~'s Friend Space</div>
+        <div class="in">
+          <div style="font:bold 13px 'Comic Sans MS',cursive;margin-bottom:8px">~*RoNNiE*~ has <span id="friendcount" class="rainbow">8</span> friends.
+            <span style="font:10px Verdana;color:#ffb3f0">(click a friend 2 unfriend them. asia comes as a set, they r a group chat)</span></div>
+          <div class="top8" id="friends"></div>
+          <hr class="rb">
+          <div class="bigbtns">
+            <button type="button" class="big act-block">&hearts; BLOCK EM &hearts;</button>
+            <button type="button" class="big alt act-unblock">unblock all (i forgive u)</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="box" id="comments">
+        <div class="hdr blue">~*RoNNiE*~'s Friends Comments</div>
+        <div class="in" id="cmts"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer">
+    <div class="construction"></div>
+    you r visitor # <span id="counter">001337</span><br><br>
+    About | FAQ | Terms | Privacy | <a href="#me">Back 2 top</a><br>
+    &copy; 2006 PingSpace <span id="ver"></span>. best viewed in 800x600 w/ ur ping under 50. no servers were harmed. ok some were<br>
+    <span class="blink" style="color:#fff200">~*~ thx 4 visiting ~*~ leave a comment ~*~</span>
+  </div>
+</div>
+
+<div id="busy"><div class="ld glitter">Loading... plz wait</div><div class="bar"><i></i></div><div id="busytxt" style="font:11px Verdana;color:#ffb3f0">talking 2 the firewall</div></div>
+<div id="oops"><div class="h">Sorry!! somethin broke :(</div><div class="b">
+  the firewall said:<pre id="oopsmsg"></pre>
+  nothing was changed. try again, or close + reopen me.<br><br><button type="button" id="oopsok">ok :'(</button></div></div>
+<div id="clicktoplay" class="blink">&#9835; click anywhere 2 hear my song &#9835;</div>
+
+<script type="text/javascript">
+/* ~*~*~ ~*RoNNiE*~'s profile code. dont copy!!! ~*~*~ */
+var $ = function (s) { return document.querySelector(s); };
+var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
+
+/* ---------- 8-bit lullaby (WebAudio, made up on the spot, no files) ---------- */
+var Chip = (function () {
+  var ctx = null, master = null, timer = null, step = 0, nextT = 0, playing = false, vol = 0.45, analyser = null;
+  var BPM = 112, S8 = 60 / BPM / 2;
+  // lead melody, 8 bars x 8 eighth notes. -1 = hold, 0 = rest
+  var LEAD = [
+    76,-1,79,-1,84,-1,83,79,   81,-1,-1,-1,76,-1,72,-1,
+    77,-1,81,-1,84,-1,81,77,   79,-1,-1,-1,74,-1,71,74,
+    76,-1,79,-1,84,-1,86,84,   81,-1,84,-1,88,-1,86,84,
+    81,-1,77,-1,79,81,79,77,   74,-1,76,-1,72,-1,-1,0 ];
+  var CHORDS = [ [60,64,67,72],[57,60,64,69],[53,57,60,65],[55,59,62,67],
+                 [60,64,67,72],[57,60,64,69],[53,57,60,65],[55,59,62,67] ];
+  var ROOTS = [48,45,41,43,48,45,41,43];
+  function hz(m) { return 440 * Math.pow(2, (m - 69) / 12); }
+  function pulseWave(duty) {
+    var n = 40, re = new Float32Array(n), im = new Float32Array(n);
+    for (var i = 1; i < n; i++) re[i] = (2 / (i * Math.PI)) * Math.sin(i * Math.PI * duty);
+    return ctx.createPeriodicWave(re, im);
+  }
+  var waves = {};
+  function tone(midi, t, dur, kind, gain, vib) {
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    if (kind === 'tri') o.type = 'triangle'; else o.setPeriodicWave(waves[kind]);
+    o.frequency.setValueAtTime(hz(midi), t);
+    if (vib) {
+      var l = ctx.createOscillator(), lg = ctx.createGain();
+      l.frequency.value = 5.5; lg.gain.setValueAtTime(0, t); lg.gain.linearRampToValueAtTime(12, t + Math.min(dur, .35));
+      l.connect(lg); lg.connect(o.detune); l.start(t); l.stop(t + dur + .05);
+    }
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(gain, t + 0.01);
+    g.gain.exponentialRampToValueAtTime(gain * 0.6, t + 0.12);
+    g.gain.setValueAtTime(gain * 0.6, Math.max(t + 0.12, t + dur - 0.04));
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t + dur + 0.02);
+  }
+  var noiseBuf = null;
+  function hat(t, gain) {
+    var s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    s.buffer = noiseBuf; f.type = 'highpass'; f.frequency.value = 7000;
+    g.gain.setValueAtTime(gain, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
+    s.connect(f); f.connect(g); g.connect(master); s.start(t); s.stop(t + 0.06);
+  }
+  var crush = null, onGlitch = null;
+  // glitchy stutter fill: the note chops into 32nds, gets bit-crushed and tape-stops down an octave
+  function stutter(t, midi) {
+    for (var k = 0; k < 8; k++) {
+      var o = ctx.createOscillator(), g = ctx.createGain(), tt = t + k * S8 / 4;
+      o.setPeriodicWave(waves.p125);
+      o.frequency.setValueAtTime(hz(midi - (k >= 5 ? (k - 4) * 4 : 0)), tt);
+      if (k === 7) o.frequency.exponentialRampToValueAtTime(hz(midi - 24), tt + S8 / 4);
+      g.gain.setValueAtTime(0.09 * (1 - k * 0.07), tt);
+      g.gain.exponentialRampToValueAtTime(0.0001, tt + S8 / 4 * 0.85);
+      o.connect(g); g.connect(crush); o.start(tt); o.stop(tt + S8 / 4);
+    }
+    if (onGlitch) setTimeout(onGlitch, Math.max(0, (t - ctx.currentTime) * 1000));
+  }
+  function schedule() {
+    while (nextT < ctx.currentTime + 0.15) {
+      var i = step % 64, bar = Math.floor(i / 8), beat = i % 8;
+      var n = LEAD[i];
+      if (i % 32 === 30) stutter(nextT, i === 30 ? 74 : 84);
+      if (i % 32 >= 30) n = 0;
+      if (n > 0) {
+        var len = 1; while (LEAD[(i + len) % 64] === -1 && len < 8) len++;
+        tone(n, nextT, S8 * len * 0.95, 'p25', 0.11, true);
+        tone(n + 12, nextT + S8 * 0.5, S8 * 0.4, 'p125', 0.025, false); // tiny echo sparkle
+      }
+      // arp in 16ths
+      var ch = CHORDS[bar];
+      tone(ch[(beat * 2) % 4] + 12, nextT, S8 * 0.45, 'p125', 0.03, false);
+      tone(ch[(beat * 2 + 1) % 4] + 12, nextT + S8 / 2, S8 * 0.45, 'p125', 0.03, false);
+      // bass
+      if (beat % 2 === 0) tone(ROOTS[bar] + (beat === 4 ? 12 : 0), nextT, S8 * 1.8, 'tri', 0.22, false);
+      if (beat % 2 === 1) hat(nextT, 0.04);
+      nextT += S8; step++;
+    }
+  }
+  function init() {
+    if (ctx) return;
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    master = ctx.createGain(); master.gain.value = vol;
+    analyser = ctx.createAnalyser(); analyser.fftSize = 64;
+    master.connect(analyser); analyser.connect(ctx.destination);
+    waves.p25 = pulseWave(0.25); waves.p125 = pulseWave(0.125);
+    crush = ctx.createWaveShaper(); // 3-bit-ish staircase = crunchy
+    var curve = new Float32Array(256); for (var c = 0; c < 256; c++) curve[c] = Math.round((c / 127.5 - 1) * 4) / 4;
+    crush.curve = curve; crush.connect(master);
+    noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 0.1, ctx.sampleRate);
+    var d = noiseBuf.getChannelData(0); for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  }
+  return {
+    play: function () {
+      init();
+      return ctx.resume().then(function () {
+        if (playing) return true;
+        if (ctx.state !== 'running') return false;
+        playing = true; nextT = ctx.currentTime + 0.05; timer = setInterval(schedule, 25); return true;
+      });
+    },
+    stop: function () { playing = false; clearInterval(timer); if (ctx) ctx.suspend(); },
+    isPlaying: function () { return playing; },
+    onGlitch: function (fn) { onGlitch = fn; },
+    setVol: function (v) { vol = v; if (master) master.gain.setTargetAtTime(v, ctx.currentTime, 0.05); },
+    levels: function () {
+      if (!analyser || !playing) return null;
+      var a = new Uint8Array(analyser.frequencyBinCount); analyser.getByteFrequencyData(a); return a;
+    }
+  };
+})();
+
+/* ---------- app state ---------- */
+var FRIENDS = [
+  { name: 'Sydney', group: null, hue: 0, tag: 'bff 4 lyfe' },
+  { name: 'Melbourne', group: null, hue: 45, tag: 'ride or die' },
+  { name: 'Singapore', group: 'asia', hue: 110, tag: '150ms :(' },
+  { name: 'Tokyo', group: 'asia', hue: 160, tag: '130ms' },
+  { name: 'Seoul', group: 'asia', hue: 200, tag: '160ms' },
+  { name: 'Taipei', group: 'asia', hue: 250, tag: '140ms' },
+  { name: 'Los Angeles', group: 'americas', hue: 290, tag: '180ms' },
+  { name: 'Amsterdam', group: 'europe', hue: 330, tag: '300ms lol' }
+];
+var GROUP_NAMES = { asia: 'Asia', americas: 'Americas', europe: 'Europe + Middle East' };
+var S = { selected: { asia: true, americas: false, europe: false }, active: [], dryRun: false, music: true };
+var api = null;
+
+function log(msg, cls) {
+  var d = new Date(), t = d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  var row = document.createElement('div');
+  row.innerHTML = '<span class="t">' + t + '</span> &mdash; ';
+  var s = document.createElement('span'); if (cls) s.className = cls; s.textContent = msg; row.appendChild(s);
+  var box = $('#log'); box.insertBefore(row, box.firstChild);
+}
+
+function selectedList() { return Object.keys(S.selected).filter(function (k) { return S.selected[k]; }); }
+function sameSet(a, b) { return a.length === b.length && a.every(function (x) { return b.indexOf(x) >= 0; }); }
+
+function renderFriends() {
+  var box = $('#friends'); box.innerHTML = '';
+  var left = 0;
+  FRIENDS.forEach(function (f) {
+    var off = f.group && S.selected[f.group];
+    if (!off) left++;
+    var el = document.createElement('div');
+    el.className = 'friend' + (f.group ? '' : ' safe') + (off ? ' off' : '');
+    el.title = f.group ? (off ? 'click 2 re-friend ' + GROUP_NAMES[f.group] : 'click 2 unfriend ' + GROUP_NAMES[f.group]) : 'never blocked. bffs 4 ever';
+    el.innerHTML = '<img class="av" src="me.jpg" alt="" style="filter:hue-rotate(' + f.hue + 'deg) saturate(1.4)">' +
+      '<span class="fname"></span><span class="tag"></span><span class="stamp">BLOCKED</span>';
+    el.querySelector('.fname').textContent = f.name;
+    el.querySelector('.tag').textContent = f.group ? f.tag : '\u2665 ' + f.tag + ' \u2665';
+    el.onclick = function () {
+      if (!f.group) { log(f.name + ' cant be blocked. we r bffs', 'ok'); sparkBurst(el); return; }
+      S.selected[f.group] = !S.selected[f.group];
+      log((S.selected[f.group] ? 'unfriended ' : 're-friended ') + GROUP_NAMES[f.group] + ' (not saved yet)');
+      sparkBurst(el); render();
+    };
+    box.appendChild(el);
+  });
+  $('#friendcount').textContent = left;
+}
+
+function render() {
+  renderFriends();
+  var active = S.active.slice().sort();
+  var on = active.length > 0;
+  var names = active.map(function (k) { return GROUP_NAMES[k] || k; }).join(' + ');
+  $('#ext').className = 'box' + (on ? '' : ' bad');
+  $('#statusline').innerHTML = on ? '&hearts; blocking <span class="rainbow"></span> &hearts; ur safe now' : 'not blocking anything rn :\'(';
+  if (on) $('#statusline .rainbow').textContent = names;
+  $('#statussub').textContent = on ? 'overwatch can\'t reach those servers. go queue. sydney is waiting 4 u and she\'s wearing ur headset'
+                                  : 'the game can put u anywhere. even singapore. ESPECIALLY singapore. it WANTS u in singapore';
+  $('#mood').textContent = on ? 'protected :)' : 'vulnerable :\'(';
+  $('#ping').textContent = on ? '~20ms <3' : '150ms?? :(';
+  var pending = !sameSet(active, selectedList());
+  $('#pending').style.display = pending ? 'block' : 'none';
+  $('#pending').textContent = !on ? '(ur top 8 is ready. hit the big pink BLOCK EM button 2 make it real)'
+                                  : '(u changed ur top 8... hit BLOCK EM again 2 save it)';
+}
+
+function setBusy(b, txt) {
+  $('#busy').style.display = b ? 'block' : 'none';
+  if (txt) $('#busytxt').textContent = txt;
+  $$('.act-block,.act-unblock,#browse2,#refresh').forEach(function (x) { x.disabled = b; });
+}
+
+function oops(msg) { $('#oopsmsg').textContent = msg || 'no idea tbh'; $('#oops').style.display = 'block'; log('error: ' + msg, 'err'); }
+$('#oopsok').onclick = function () { $('#oops').style.display = 'none'; };
+
+function applyResult(r) {
+  if (r && r.active) S.active = r.active;
+  render();
+  if (r && r.ok) log(r.message, 'ok'); else oops(r ? r.message : 'no response');
+}
+
+function doBlock() {
+  var groups = selectedList(), path = $('#pathbox').value.trim();
+  if (!groups.length) { oops('u didnt unfriend anyone. click some friends in ur top 8 first'); return; }
+  if (!path) { oops('i cant find Overwatch.exe. click "find it" and pick it'); return; }
+  setBusy(true, 'unfriending ' + groups.map(function (k) { return GROUP_NAMES[k]; }).join(' + ') + '...');
+  api.block(groups, path).then(applyResult, function (e) { oops(String(e && e.message || e)); })
+    .then(function () { setBusy(false); });
+}
+function doUnblock() {
+  setBusy(true, 'forgiving everyone...');
+  api.unblock().then(applyResult, function (e) { oops(String(e && e.message || e)); })
+    .then(function () { setBusy(false); });
+}
+function doBrowse(ev) {
+  if (ev) ev.preventDefault();
+  api.browse().then(function (p) { if (p) { $('#pathbox').value = p; log('found overwatch: ' + p, 'ok'); } });
+}
+function doRefresh() {
+  setBusy(true, 'checking...');
+  return api.get_state().then(function (st) {
+    S.active = st.active || []; render(); log('checked ur firewall', 'ok');
+    if (st.legacy) log('found old rules from the original switcher. block or unblock will clean them up');
+  }, function (e) { oops(String(e)); }).then(function () { setBusy(false); });
+}
+$$('.act-block').forEach(function (b) { b.onclick = doBlock; });
+$$('.act-unblock').forEach(function (b) { b.onclick = doUnblock; });
+$('#browse').onclick = doBrowse; $('#browse2').onclick = doBrowse; $('#refresh').onclick = doRefresh;
+
+/* ---------- music player ---------- */
+function setPlayBtn() { $('#play').innerHTML = Chip.isPlaying() ? '&#10074;&#10074; pause' : '&#9654; play'; }
+$('#play').onclick = function () {
+  if (Chip.isPlaying()) { Chip.stop(); S.music = false; } else { Chip.play().then(setPlayBtn); S.music = true; }
+  $('#clicktoplay').style.display = 'none';
+  setPlayBtn(); if (api && api.set_music) api.set_music(S.music);
+};
+$('#vol').oninput = function () { Chip.setVol(this.value / 100); };
+Chip.onGlitch(function () {
+  document.body.classList.add('glitchnow');
+  setTimeout(function () { document.body.classList.remove('glitchnow'); }, 300);
+});
+(function viz() {
+  var bars = []; for (var i = 0; i < 16; i++) { var s = document.createElement('span'); $('#viz').appendChild(s); bars.push(s); }
+  (function frame() {
+    var a = Chip.levels();
+    bars.forEach(function (b, i) { b.style.height = a ? Math.max(6, a[i + 1] / 255 * 100) + '%' : '6%'; });
+    requestAnimationFrame(frame);
+  })();
+})();
+function startMusic() {
+  if (!S.music) return;
+  Chip.play().then(function (ok) {
+    setPlayBtn();
+    if (!ok) {
+      $('#clicktoplay').style.display = 'block';
+      var go = function () {
+        document.removeEventListener('pointerdown', go, true);
+        $('#clicktoplay').style.display = 'none';
+        if (S.music) Chip.play().then(setPlayBtn);
+      };
+      document.addEventListener('pointerdown', go, true);
+    }
+  });
+}
+
+/* ---------- obnoxious extras ---------- */
+(function dvd() {
+  var el = $('#dvd'), x = 60, y = 90, vx = 1.6, vy = 1.2, hue = 0;
+  (function f() {
+    var w = window.innerWidth - 84, h = window.innerHeight - 84;
+    x += vx; y += vy;
+    if (x < 0 || x > w) { vx = -vx; hue = (hue + 67) % 360; x = Math.max(0, Math.min(w, x)); }
+    if (y < 0 || y > h) { vy = -vy; hue = (hue + 67) % 360; y = Math.max(0, Math.min(h, y)); }
+    el.style.left = x + 'px'; el.style.top = y + 'px'; el.style.filter = 'hue-rotate(' + hue + 'deg)';
+    requestAnimationFrame(f);
+  })();
+})();
+var SPARKS = ['\u2605', '\u2726', '\u2665', '\u2727', '*'], COLORS = ['#ff2bd6', '#fff200', '#39ff14', '#00f0ff', '#fff'];
+function spark(x, y) {
+  var s = document.createElement('span'); s.className = 'spark';
+  s.textContent = SPARKS[Math.random() * SPARKS.length | 0];
+  s.style.left = x + 'px'; s.style.top = y + 'px'; s.style.color = COLORS[Math.random() * COLORS.length | 0];
+  document.body.appendChild(s); setTimeout(function () { s.remove(); }, 950);
+}
+var lastSpark = 0;
+document.addEventListener('mousemove', function (e) {
+  var now = Date.now(); if (now - lastSpark < 35) return; lastSpark = now; spark(e.clientX + 6, e.clientY + 6);
+});
+function sparkBurst(el) {
+  var r = el.getBoundingClientRect();
+  for (var i = 0; i < 12; i++) spark(r.left + Math.random() * r.width, r.top + Math.random() * r.height);
+}
+var COMMENTS = [
+  ['SydneyServer', 0, '20ms bby &lt;3 thx 4 the add!! u can lag inside me anytime'],
+  ['xX_SingaporeServer_Xx', 110, 'y did u unfriend me?? i thought we had something. i was gonna give u 180ms 4 ur birthday :\'('],
+  ['ur_ping', 200, 'ive never felt so small. thx ronnie. my mum says im still big'],
+  ['MelbourneServer', 45, 'pc4pc!! luv the new layout. ur alien face makes me feel things i cant explain 2 my parents'],
+  ['WindowsFirewall', 300, 'im literally just a wall but 2nite i get 2 be a bouncer. best day of my life'],
+  ['TokyoServer', 160, 'ok fine. i didnt want 2 host ur games anyway. ur team was throwing']
+];
+(function comments() {
+  var box = $('#cmts');
+  COMMENTS.forEach(function (c, i) {
+    var d = document.createElement('div'); d.className = 'cmt';
+    d.innerHTML = '<div class="who"><img src="me.jpg" alt="" style="filter:hue-rotate(' + c[1] + 'deg)"><a href="#top8"></a></div>' +
+      '<div class="what"><span class="when">' + (i + 1) * 3 + ' minutes ago</span>' + c[2] + '</div>';
+    d.querySelector('a').textContent = c[0];
+    box.appendChild(d);
+  });
+})();
+$('#lastlogin').textContent = new Date().toLocaleDateString();
+log('~*RoNNiE*~ updated his profile!!');
+
+/* ---------- connect 2 python (or demo mode in a normal browser) ---------- */
+function demoApi() {
+  $('#demo').style.display = 'block';
+  var active = [];
+  var wait = function (v) { return new Promise(function (r) { setTimeout(function () { r(v); }, 700); }); };
+  return {
+    get_state: function () { return wait({ selected: ['asia'], path: 'C:\\Program Files (x86)\\Overwatch\\_retail_\\Overwatch.exe', active: active, legacy: false, dry_run: true, music: true }); },
+    block: function (g) { active = g.slice(); return wait({ ok: true, message: 'demo: pretended 2 block ' + g.join(' + '), active: active }); },
+    unblock: function () { active = []; return wait({ ok: true, message: 'demo: pretended 2 unblock everything', active: active }); },
+    browse: function () { return wait('C:\\Games\\Overwatch\\_retail_\\Overwatch.exe'); },
+    set_music: function () { return wait(true); }
+  };
+}
+function connect() {
+  return new Promise(function (resolve) {
+    if (window.pywebview && window.pywebview.api) return resolve(window.pywebview.api);
+    var done = false;
+    window.addEventListener('pywebviewready', function () { if (!done) { done = true; resolve(window.pywebview.api); } });
+    setTimeout(function () { if (!done) { done = true; resolve(null); } }, 2000);
+  });
+}
+connect().then(function (a) {
+  api = a || demoApi();
+  setBusy(true, 'checking ur firewall + looking 4 overwatch...');
+  return api.get_state().then(function (st) {
+    S.active = st.active || [];
+    S.dryRun = !!st.dry_run;
+    S.music = st.music !== false;
+    S.selected = { asia: false, americas: false, europe: false };
+    (st.selected || ['asia']).forEach(function (k) { if (k in S.selected) S.selected[k] = true; });
+    $('#pathbox').value = st.path || '';
+    if (st.version) $('#ver').textContent = 'v' + st.version;
+    if (!st.path) log('couldnt find Overwatch.exe by myself. click "find it"', 'err');
+    if (st.legacy) log('found old rules from the original switcher. block or unblock will clean them up');
+    if (S.dryRun && a) { $('#demo').textContent = 'DRY RUN: the firewall script gets printed, nothing changes'; $('#demo').style.display = 'block'; }
+    render();
+    startMusic();
+  }, function (e) { oops(String(e)); });
+}).then(function () { setBusy(false); });
+</script>
+</body>
+</html>
