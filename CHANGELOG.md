@@ -5,6 +5,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-11-10
+
+### Added
+
+- More emo-era cringe in the app and the guide: tilted rainbow WordArt phrases ("rawr XD", "its not a phase MOM", "*glomps u*"...), heavy-eyeliner emo eyes that blink out of the dark with a mascara tear, rains of broken hearts, skulls, crosses and stars, fake Windows 98 "u r the 1,000,000th visitor" popups that slide in, shake and leave, and Blingee sparkles round the pin-ups. Where the side gutters have room, pop-ups stay in them so the text stays readable.
+
+### Fixed
+
+- The guide's gutter pin-ups were piled up and hidden behind the steps: a later `.pinhit{position:relative}` rule overrode the gutter's `position:absolute`. A layout script now spreads the pin-ups and stickers evenly down both sides, sized to the space available, and the gutters show from 1100px wide instead of 1290px.
+
 ## [1.3.1] - 2026-11-10
 
 ### Added
@@ -86,7 +96,8 @@ First release of PingSpace, a rework of [Peak2548/ow-server-switcher](https://gi
 - Selecting Australia in the original tool blocked some Australian servers, because its Singapore (`34.124.0.0/16`) and Netherlands (`37.244.0.0/16`) ranges contain Sydney ranges. Australian ranges are now subtracted from every block list.
 - Rules from the original tool applied to every program on the PC. They are now limited to Overwatch.exe, and rules left behind by the original tool are cleaned up.
 
-[Unreleased]: https://github.com/MJWNA/pingspace/compare/v1.3.1...HEAD
+[Unreleased]: https://github.com/MJWNA/pingspace/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/MJWNA/pingspace/compare/v1.3.1...v1.4.0
 [1.3.1]: https://github.com/MJWNA/pingspace/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/MJWNA/pingspace/compare/v1.2.2...v1.3.0
 [1.2.2]: https://github.com/MJWNA/pingspace/compare/v1.2.1...v1.2.2

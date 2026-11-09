@@ -39,6 +39,7 @@ a:hover{color:var(--hot)}
 body{position:relative}
 .gutter{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 .gutter > *{position:absolute;filter:drop-shadow(0 8px 14px rgba(0,0,0,.55));animation:sway 5s ease-in-out infinite}
+.gutter > .pinhit{position:absolute}   /* beats the generic .pinhit{position:relative} further down */
 .gutter .pinhit img{width:100%;display:block}
 .gutter .pin{width:230px}
 .gutter .stk{width:180px}
@@ -48,7 +49,7 @@ body{position:relative}
 .gutter .flip{animation-name:swayflip}
 @keyframes sway{50%{transform:translateY(-12px) rotate(-3deg)}}
 @keyframes swayflip{0%,100%{transform:scaleX(-1)}50%{transform:scaleX(-1) translateY(-12px) rotate(3deg)}}
-@media (max-width:1290px){.gutter{display:none}}
+@media (max-width:1100px){.gutter{display:none}}   /* the layout script below decides on wider screens */
 
 /* install supervisors box */
 .sup{display:flex;justify-content:center;align-items:flex-end;gap:6px;background:
@@ -405,6 +406,27 @@ a, button, label, summary, input, .dl{cursor:url(assets/sausage-cursor.png) 3 3,
 </div>
 
 <script>
+// spread the pin-ups and stickers evenly down both side gutters, sized to fit the space beside the steps
+(function () {
+  var g = document.querySelector('.gutter'), items = [].slice.call(g.children), CONTENT = 840;
+  function layout() {
+    var W = document.documentElement.clientWidth, side = (W - CONTENT) / 2;
+    if (side < 130) { g.style.display = 'none'; return; }
+    g.style.display = '';
+    var H = document.documentElement.scrollHeight, rows = Math.ceil(items.length / 2), slot = (H - 260) / rows;
+    items.forEach(function (el, i) {
+      var left = i % 2 === 0, row = i >> 1;
+      var w = Math.min(el.classList.contains('pin') ? 240 : 190, side - 24), pad = Math.max(8, (side - w) / 2);
+      el.style.width = w + 'px';
+      el.style.top = Math.round(140 + slot * row + (left ? 0 : slot * 0.5)) + 'px';
+      el.style.left = left ? pad + 'px' : 'auto';
+      el.style.right = left ? 'auto' : pad + 'px';
+    });
+  }
+  layout(); addEventListener('resize', layout); addEventListener('load', layout);
+  items.forEach(function (el) { var im = el.tagName === 'IMG' ? el : el.querySelector('img'); if (im && !im.complete) im.addEventListener('load', layout); });
+})();
+
 // tick boxes remember where u got up to (only on this browser)
 (function () {
   var boxes = document.querySelectorAll('input[data-step]');
@@ -428,7 +450,7 @@ a, button, label, summary, input, .dl{cursor:url(assets/sausage-cursor.png) 3 3,
 </script>
 <script>window.GOO_CONFIG = { surfaces: 'p,li,img,.mock,.dl,.hdr,.box,h1,h2,summary,label,.need,.nope,.lol,.tag,.counter,ol,ul,footer,.shot', z: 40 };</script>
 <script src="demo/goo.js"></script>
-<script>window.Y2K_CONFIG = { backZ: 0, frontZ: 30 };</script>
+<script>window.Y2K_CONFIG = { backZ: 0, frontZ: 30, content: 860 };</script>
 <script src="demo/y2k.js"></script>
 </body>
 </html>
