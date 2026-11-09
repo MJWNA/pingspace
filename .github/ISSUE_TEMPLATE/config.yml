@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Install guide
+    url: https://mjwna.github.io/pingspace/
+    about: Step-by-step instructions for installing and using PingSpace.
+  - name: Security issue
+    url: https://github.com/MJWNA/pingspace/security/advisories/new
+    about: Please report security problems privately.

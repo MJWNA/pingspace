@@ -1,0 +1,25 @@
+name: Wrong server range
+description: An Asian server got through, or an Australian server got blocked
+labels: [ip-ranges]
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What went wrong?
+      options:
+        - I was placed on an Asian server while blocking was on
+        - An Australian server was blocked
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: ip
+    attributes:
+      label: Server IP address
+      description: In Overwatch, press Ctrl+Shift+N during a match to show network stats, or check Resource Monitor > Network for Overwatch.exe.
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else

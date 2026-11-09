@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How 2 Install PingSpace</title>
+<meta name="description" content="Step by step: install PingSpace and stop Overwatch putting you on Asian servers. Takes 5 minutes. No nerd stuff.">
+<meta property="og:title" content="How 2 Install PingSpace">
+<meta property="og:description" content="Stop Overwatch dumping you on 150ms Asian servers. 5 minutes, zero brain cells required.">
+<meta property="og:image" content="https://mjwna.github.io/pingspace/assets/banner.webp">
+<link rel="icon" href="assets/icon.png">
+<style>
+:root{
+  --ink:#16001f; --muted:#5b4a66; --paper:#ffffff; --paper2:#fff5fd;
+  --pink:#ff2bd6; --hot:#e0007a; --purple:#6a00e6; --lime:#39ff14; --cyan:#00d5ff; --yellow:#fff200;
+  --win:#0067c0; --ok:#0a7a2a;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; color:var(--ink); font:18px/1.6 Verdana, Tahoma, "Segoe UI", sans-serif;
+  background-color:#2a0050;
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(255,43,214,.55) 0 2px, transparent 3px),
+    radial-gradient(circle at 70% 60%, rgba(255,242,0,.6) 0 2px, transparent 3px),
+    radial-gradient(circle at 40% 85%, rgba(0,213,255,.6) 0 2px, transparent 3px),
+    repeating-conic-gradient(#3a0070 0 25%, #2a0050 0 50%);
+  background-size:90px 90px, 130px 130px, 110px 110px, 48px 48px;
+  animation:drift 30s linear infinite;
+}
+@keyframes drift{to{background-position:90px 180px, -130px 130px, 110px -110px, 48px 48px}}
+
+a{color:var(--purple);font-weight:bold}
+a:hover{color:var(--hot)}
+
+.wrap{max-width:820px;margin:0 auto;padding:0 16px 60px;position:relative}
+
+/* floaty stickers on big screens */
+.sticker{position:fixed;width:190px;z-index:0;pointer-events:none;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
+.sticker.l{left:calc(50% - 640px);top:150px;animation:bob 4s ease-in-out infinite}
+.sticker.r{right:calc(50% - 640px);top:420px;animation:bob 5s ease-in-out infinite reverse}
+@keyframes bob{50%{transform:translateY(-14px) rotate(-4deg)}}
+@media (max-width:1290px){.sticker{display:none}}
+
+header{text-align:center;padding:18px 0 4px;position:relative;z-index:1}
+header .banner{width:100%;max-width:560px;display:block;margin:0 auto;border-radius:14px}
+.tag{display:inline-block;background:var(--yellow);color:#000;font:bold 15px "Comic Sans MS", "Comic Neue", cursive;
+  padding:4px 14px;transform:rotate(-2deg);box-shadow:4px 4px 0 #000;margin-top:-10px;position:relative}
+
+.marquee{overflow:hidden;white-space:nowrap;background:#000;color:var(--yellow);font:bold 15px "Comic Sans MS", cursive;
+  border-block:2px dashed var(--pink);margin:16px 0;padding:6px 0;position:relative;z-index:1}
+.marquee span{display:inline-block;padding-left:100%;animation:scroll 22s linear infinite}
+@keyframes scroll{to{transform:translateX(-100%)}}
+
+/* boxes */
+.box{background:var(--paper);border:3px solid #000;box-shadow:7px 7px 0 #000;margin:22px 0;position:relative;z-index:1}
+.hdr{background:var(--pink);color:#000;font:bold 17px Verdana, sans-serif;padding:7px 14px;border-bottom:3px solid #000}
+.hdr.purple{background:var(--purple);color:#fff}
+.hdr.lime{background:var(--lime)}
+.hdr.cyan{background:var(--cyan)}
+.in{padding:16px 20px}
+.in p{margin:0 0 12px}
+
+.intro{display:flex;gap:18px;align-items:flex-start}
+.intro img{width:118px;height:118px;border-radius:50%;object-fit:cover;object-position:62% 28%;border:4px solid var(--pink);flex:none;
+  animation:wobble 3s ease-in-out infinite}
+@keyframes wobble{25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
+.intro h1{font:bold 26px/1.2 "Comic Sans MS", "Comic Neue", cursive;margin:0 0 8px}
+
+.need{list-style:none;padding:0;margin:0}
+.need li{padding:6px 0 6px 36px;position:relative}
+.need li:before{content:"\2714";position:absolute;left:0;top:4px;width:26px;height:26px;border-radius:50%;background:var(--lime);
+  color:#000;font-size:15px;text-align:center;line-height:26px;font-weight:bold;border:2px solid #000}
+.nope{background:#fff2fb;border:2px dashed var(--hot);padding:10px 14px;margin-top:10px;font-weight:bold}
+
+/* steps */
+.step .hdr{display:flex;align-items:center;gap:12px;font-size:20px}
+.num{flex:none;width:44px;height:44px;border-radius:50%;background:#000;color:var(--yellow);font:bold 24px/40px "Comic Sans MS", cursive;
+  text-align:center;border:3px solid var(--yellow)}
+.do{font-size:19px}
+.do b{background:var(--yellow);padding:0 4px}
+.btnlike{display:inline-block;font:bold 15px "Segoe UI", sans-serif;border:2px solid #333;background:#eee;padding:1px 10px;border-radius:3px;white-space:nowrap}
+.lol{background:var(--paper2);border-left:6px solid var(--pink);padding:8px 12px;margin:14px 0 0;font:15px/1.5 "Comic Sans MS", "Comic Neue", cursive;color:#5a0047}
+.lol:before{content:"ronnie says: ";font-weight:bold;color:var(--hot)}
+.shot{display:block;max-width:100%;border:3px solid #000;margin:12px 0;box-shadow:4px 4px 0 var(--pink)}
+.cap{font-size:14px;color:var(--muted);margin-top:-6px}
+ol.sub{margin:8px 0 0;padding-left:26px}
+ol.sub li{margin:6px 0}
+.path{font:15px Consolas, "Courier New", monospace;background:#16001f;color:var(--lime);padding:6px 10px;display:inline-block;word-break:break-all;border-radius:4px}
+
+.dl{display:block;text-align:center;text-decoration:none;color:#fff;font:bold 26px "Comic Sans MS", "Comic Neue", cursive;
+  background:linear-gradient(#ff5ce1,#c4009a);border:4px solid #000;box-shadow:6px 6px 0 #000;padding:18px 10px;margin:8px 0 6px;
+  text-shadow:2px 2px 0 #000;animation:pulse 1.6s ease-in-out infinite}
+.dl small{display:block;font:14px Verdana;text-shadow:none;opacity:.95}
+.dl:hover{color:var(--yellow)}
+@keyframes pulse{50%{transform:scale(1.025)}}
+
+/* fake windows boxes so he knows what to expect */
+.mock{border:1px solid #888;max-width:460px;margin:12px 0;font-family:"Segoe UI", Arial, sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.mock.smart{background:var(--win);color:#fff;padding:22px 24px}
+.mock.smart .t{font-size:24px;margin-bottom:10px}
+.mock.smart .s{font-size:14px;opacity:.95}
+.mock .link{text-decoration:underline;font-size:15px;display:inline-block;margin-top:12px;outline:3px solid var(--yellow);outline-offset:3px;animation:blink 1s steps(2,start) infinite}
+.mock .row{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+.mock .b{border:1px solid #fff;padding:5px 18px;font-size:14px}
+.mock .b.go{background:#fff;color:var(--win);outline:3px solid var(--yellow);outline-offset:3px;font-weight:bold}
+.mock.uac{background:#fff;color:#000}
+.mock.uac .top{background:#1f1f1f;color:#fff;padding:10px 16px;font-size:13px}
+.mock.uac .body{padding:16px}
+.mock.uac .t{font-size:19px;margin-bottom:8px}
+.mock.uac .row .b{border-color:#999;color:#000}
+.mock.uac .row .b.go{background:var(--win);color:#fff;border-color:var(--win)}
+.arrow{color:var(--yellow);font:bold 16px "Comic Sans MS", cursive;margin-left:10px}
+@keyframes blink{to{outline-color:transparent}}
+
+.done{display:flex;align-items:center;gap:10px;margin-top:16px;padding-top:12px;border-top:2px dotted #ccc;font:bold 16px Verdana}
+.done input{width:26px;height:26px;accent-color:var(--ok)}
+.step.ticked{opacity:.75}
+.step.ticked .hdr{background:var(--lime)}
+
+.faq details{border-bottom:2px dotted #ccc;padding:10px 0}
+.faq summary{font-weight:bold;font-size:18px;cursor:pointer}
+.faq details p{margin:8px 0 0}
+
+.win{text-align:center}
+.win img{width:220px;max-width:60%}
+.win h2{font:bold 30px "Comic Sans MS", "Comic Neue", cursive;margin:4px 0}
+
+footer{text-align:center;color:#ffd6f6;font-size:14px;margin-top:30px;position:relative;z-index:1}
+.counter{display:inline-block;background:#000;color:var(--lime);font:bold 18px "Courier New", monospace;letter-spacing:3px;border:2px inset #777;padding:2px 8px}
+
+@media (max-width:600px){
+  body{font-size:17px}
+  .intro{flex-direction:column;align-items:center;text-align:center}
+  .in{padding:14px}
+  .dl{font-size:21px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*:before{animation:none!important}
+  .marquee span{padding-left:0;white-space:normal}
+}
+</style>
+</head>
+<body>
+<img class="sticker l" src="assets/goblin.webp" alt="">
+<img class="sticker r" src="assets/bouncer.webp" alt="">
+
+<div class="wrap">
+  <header>
+    <img class="banner" src="assets/banner.webp" alt="How 2 Install">
+    <div class="tag">PingSpace: stop Overwatch sending u to Singapore</div>
+  </header>
+
+  <div class="marquee" aria-hidden="true"><span>~*~ 5 minutes ~*~ no nerd stuff ~*~ zero brain cells required (we checked) ~*~ 150 ping is a hate crime ~*~ sydney 4 lyfe ~*~ xoxo ronnie ~*~</span></div>
+
+  <div class="box">
+    <div class="hdr">read this first or ill know</div>
+    <div class="in intro">
+      <img src="demo/me.jpg" alt="Ronnie as a purple space alien">
+      <div>
+        <h1>sup legend. ronnie sent u this.</h1>
+        <p>Overwatch keeps throwing Australian players into Asian servers. Then u play at 150 ping and every enemy Genji teleports around like hes got the shits and u die before u even see him.</p>
+        <p><b>PingSpace fixes that.</b> It tells ur PC to block Overwatch from connecting to Asian servers, so the game has to put u on Sydney or Melbourne instead. U set it once and its done.</p>
+        <p>This page walks u through every single click. Go slow, do one step at a time and tick each box as u go.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="hdr lime">what u need</div>
+    <div class="in">
+      <ul class="need">
+        <li>A <b>Windows 10 or 11</b> PC (the one u play Overwatch on)</li>
+        <li><b>Overwatch</b> installed on it</li>
+        <li>About <b>5 minutes</b> and one working brain cell. we'll work with what we've got</li>
+      </ul>
+      <div class="nope">Nothing else to install first. No Python, no coding, no "open the terminal" nerd rubbish. It's one file u download and double-click.</div>
+    </div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="box step" id="s1">
+    <div class="hdr"><span class="num">1</span> Download PingSpace</div>
+    <div class="in">
+      <p class="do">On ur gaming PC, click this big pink button:</p>
+      <a class="dl" href="https://github.com/MJWNA/pingspace/releases/latest/download/PingSpace.exe">&hearts; DOWNLOAD PingSpace.exe &hearts;<small>one file, about 15 MB, goes into ur Downloads folder</small></a>
+      <p><b>If ur browser has a cry about it</b> ("isn't commonly downloaded" or "could harm your device"):</p>
+      <ol class="sub">
+        <li>In the little download popup, hover over the file and click the <span class="btnlike">&middot;&middot;&middot;</span> (three dots).</li>
+        <li>Click <span class="btnlike">Keep</span>.</li>
+        <li>If it asks again, click <span class="btnlike">Show more</span> then <span class="btnlike">Keep anyway</span>.</li>
+      </ol>
+      <p class="lol">browsers lose their mind over any file that isnt from a billion dollar company. its fine. the code is public, anyone can read it.</p>
+      <label class="done"><input type="checkbox" data-step="s1"> done, its downloaded</label>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="box step" id="s2">
+    <div class="hdr purple"><span class="num">2</span> Put it on ur Desktop</div>
+    <div class="in">
+      <ol class="sub">
+        <li>Press the <b>Windows key</b> and <b>E</b> at the same time. A folder window opens.</li>
+        <li>On the left side, click <b>Downloads</b>.</li>
+        <li>Find <b>PingSpace</b> (it has Ronnie's purple alien face as the icon, u cant miss it).</li>
+        <li><b>Drag it onto ur Desktop.</b></li>
+      </ol>
+      <p class="lol">now u can find it again next time instead of digging through 400 downloaded cracked minecraft mods.</p>
+      <label class="done"><input type="checkbox" data-step="s2"> done, its on my desktop</label>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="box step" id="s3">
+    <div class="hdr"><span class="num">3</span> Open it (and get past the blue box)</div>
+    <div class="in">
+      <p class="do"><b>Double-click PingSpace</b> on ur Desktop.</p>
+      <p>The first time, Windows will probably show a big blue box like this:</p>
+      <div class="mock smart" aria-label="Example of the Windows protected your PC box">
+        <div class="t">Windows protected your PC</div>
+        <div class="s">Microsoft Defender SmartScreen prevented an unrecognized app from starting. Running this app might put your PC at risk.</div>
+        <span class="link">More info</span><span class="arrow">&larr; click this first</span>
+      </div>
+      <ol class="sub">
+        <li>Click the small <b>More info</b> text.</li>
+        <li>A new button appears at the bottom. Click <span class="btnlike">Run anyway</span>.</li>
+      </ol>
+      <div class="mock smart" aria-label="Example of the Run anyway button">
+        <div class="t">Windows protected your PC</div>
+        <div class="s">App: PingSpace.exe<br>Publisher: Unknown publisher</div>
+        <div class="row"><span class="b go">Run anyway</span><span class="b">Don't run</span></div>
+      </div>
+      <p class="lol">this only shows up because i didnt pay microsoft $500 a year to be a "known publisher". i spent that money on eyeliner. u only see this box once.</p>
+      <label class="done"><input type="checkbox" data-step="s3"> done, i clicked run anyway</label>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="box step" id="s4">
+    <div class="hdr cyan"><span class="num">4</span> Say Yes to the next box</div>
+    <div class="in">
+      <p>Windows then asks if PingSpace can make changes. <b>Click <span class="btnlike">Yes</span>.</b></p>
+      <div class="mock uac" aria-label="Example of the User Account Control box">
+        <div class="top">User Account Control</div>
+        <div class="body">
+          <div class="t">Do you want to allow this app to make changes to your device?</div>
+          <div style="font-size:14px">PingSpace.exe<br>Publisher: Unknown</div>
+          <div class="row"><span class="b go">Yes</span><span class="b">No</span></div>
+        </div>
+      </div>
+      <p>It needs this because blocking servers means changing ur Windows Firewall, and Windows wont let anything touch the firewall without asking u first. It asks <b>every time</b> u open PingSpace. Always click Yes.</p>
+      <p class="lol">no its not mining crypto on ur rig. ur rig couldnt mine a minecraft block.</p>
+      <label class="done"><input type="checkbox" data-step="s4"> done, i clicked yes</label>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="box step" id="s5">
+    <div class="hdr purple"><span class="num">5</span> Don't panic. This is normal.</div>
+    <div class="in">
+      <p>A window opens with glitter, my face everywhere and 8-bit music. <b>This is what it's meant to look like.</b> Ur PC is not haunted.</p>
+      <img class="shot" src="assets/step-open.webp" alt="The PingSpace window: a glittery MySpace-style profile page">
+      <p class="cap">what u should see (plus music. theres a pause button on the left if it's too much)</p>
+      <p><b>Check one thing:</b> scroll down a bit on the left to <b>Details</b>. Next to <b>Overwatch.exe</b> there should be some text that starts with <span class="path">C:\</span>. That means it found ur game. Go to step 6.</p>
+      <p><b>If that box is empty</b>, click <b>[ find it ]</b> and pick the Overwatch file. If u installed through Battle.net it's normally here:</p>
+      <p><span class="path">C:\Program Files (x86)\Overwatch\_retail_\Overwatch.exe</span></p>
+      <p>Can't find it? Open <b>Battle.net</b>, click Overwatch, click the <b>cog</b> next to the Play button, then <b>Show in Explorer</b>. Open the <b>_retail_</b> folder and pick <b>Overwatch</b>.</p>
+      <p class="lol">yes my face is the background. and the profile pic. and every one of ur top 8 friends. and its bouncing around the screen. u will get used to it. u will never get used to it.</p>
+      <label class="done"><input type="checkbox" data-step="s5"> done, it found overwatch</label>
+    </div>
+  </div>
+
+  <!-- STEP 6 -->
+  <div class="box step" id="s6">
+    <div class="hdr"><span class="num">6</span> Hit the big pink button</div>
+    <div class="in">
+      <p>Scroll down to <b>Friend Space</b>. The Asian servers (Singapore, Tokyo, Seoul, Taipei) already have a red <b>BLOCKED</b> stamp on them. That's what we want. Leave them.</p>
+      <p class="do">Click the big pink <b>&hearts; BLOCK EM &hearts;</b> button.</p>
+      <img class="shot" src="assets/step-block.webp" alt="The Friend Space panel with Asian servers stamped BLOCKED and the BLOCK EM button">
+      <p>Wait a few seconds. The box at the top goes <b style="color:var(--ok)">green</b> and says <b>blocking Asia, ur safe now</b>. Done.</p>
+      <p class="lol">congrats. u just ghosted an entire continent. sydney and melbourne can never be blocked, they're my besties, so u cant stuff this up.</p>
+      <label class="done"><input type="checkbox" data-step="s6"> done, it went green</label>
+    </div>
+  </div>
+
+  <!-- STEP 7 -->
+  <div class="box step" id="s7">
+    <div class="hdr lime"><span class="num">7</span> Play Overwatch</div>
+    <div class="in">
+      <p>If Overwatch was already open, <b>close it fully and open it again</b>. Then queue like normal.</p>
+      <p>U can close PingSpace now. <b>The block stays on</b>, even after u restart ur PC. U never have to open PingSpace again unless u want to undo it.</p>
+      <p class="lol">go enjoy 20 ping. ur aim is still dogshit but at least now its ur fault.</p>
+      <label class="done"><input type="checkbox" data-step="s7"> done, im playing</label>
+    </div>
+  </div>
+
+  <div class="box win" id="win">
+    <div class="in">
+      <img src="assets/roo.webp" alt="Buff kangaroo: 20MS CLUB">
+      <h2>welcome 2 the 20ms club</h2>
+      <p>ur officially one of us now. there is no leaving.</p>
+    </div>
+  </div>
+
+  <!-- UNDO -->
+  <div class="box">
+    <div class="hdr purple">how 2 undo it (if u miss the lag for some reason)</div>
+    <div class="in">
+      <ol class="sub">
+        <li>Double-click <b>PingSpace</b> on ur Desktop and click <b>Yes</b>.</li>
+        <li>Click <b>unblock all (i forgive u)</b> next to the pink button.</li>
+        <li>The top box goes back to saying <b>not blocking anything</b>. Overwatch is back to normal.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="box faq">
+    <div class="hdr cyan">if something goes wrong (it wont, but)</div>
+    <div class="in">
+      <details>
+        <summary>Finding a game is taking ages</summary>
+        <p>Late at night there aren't many Aussies online, so it waits longer for a Sydney game instead of throwing u into Singapore. That's the trade. If u'd rather have a game now and don't mind the lag, open PingSpace and click <b>unblock all</b>. Block again later.</p>
+      </details>
+      <details>
+        <summary>Overwatch says "Failed to connect to server"</summary>
+        <p>Sometimes the game still tries an Asian server, can't reach it and gives up. Just queue again. Its working, it's doing its job.</p>
+      </details>
+      <details>
+        <summary>A message says it needs "WebView2"</summary>
+        <p>Most PCs already have this. If yours doesn't, go to <a href="https://developer.microsoft.com/microsoft-edge/webview2/">Microsoft's WebView2 page</a>, download the <b>Evergreen Bootstrapper</b>, run it, then open PingSpace again.</p>
+      </details>
+      <details>
+        <summary>My antivirus freaked out</summary>
+        <p>Small apps from regular people sometimes set off antivirus because nobody's heard of them. The full code is public on <a href="https://github.com/MJWNA/pingspace">GitHub</a> if anyone wants to check it. If ur unsure, message Ronnie before u do anything.</p>
+      </details>
+      <details>
+        <summary>The music is too much</summary>
+        <p>Click <b>pause</b> in the Music box on the left. It remembers, so it stays quiet next time. Coward.</p>
+      </details>
+      <details>
+        <summary>Can I get banned for this?</summary>
+        <p>PingSpace only changes ur own PC's firewall. It doesn't touch Overwatch's files, memory or anything inside the game. Blizzard hasn't said yes or no to tools like this though, so it's ur call. Use at ur own risk.</p>
+      </details>
+      <details>
+        <summary>I'm stuck</summary>
+        <p>Take a photo of the screen and send it to Ronnie. Tell him which step number u got up to.</p>
+      </details>
+    </div>
+  </div>
+
+  <footer>
+    u r visitor # <span class="counter">000069</span><br><br>
+    made with glitter + spite by ronnie &middot; <a href="https://github.com/MJWNA/pingspace" style="color:var(--yellow)">code on GitHub</a> &middot; <a href="demo/" style="color:var(--yellow)">try the demo</a><br>
+    not made by or affiliated with Blizzard. no servers were harmed. ok some were
+  </footer>
+</div>
+
+<script>
+// tick boxes remember where u got up to (only on this browser)
+(function () {
+  var boxes = document.querySelectorAll('input[data-step]');
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem('pingspace-steps') || '{}'); } catch (e) {}
+  boxes.forEach(function (b) {
+    var card = document.getElementById(b.dataset.step);
+    b.checked = !!saved[b.dataset.step];
+    card.classList.toggle('ticked', b.checked);
+    b.addEventListener('change', function () {
+      saved[b.dataset.step] = b.checked;
+      card.classList.toggle('ticked', b.checked);
+      try { localStorage.setItem('pingspace-steps', JSON.stringify(saved)); } catch (e) {}
+      if (b.checked) {
+        var next = card.nextElementSibling;
+        if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+name: Bug report
+description: Something isn't working
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for the report. The more detail, the faster it gets fixed.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: PingSpace version
+      description: Shown at the bottom of the app window, e.g. v1.0.0
+    validations:
+      required: true
+  - type: dropdown
+    id: windows
+    attributes:
+      label: Windows version
+      options: [Windows 11, Windows 10, Other]
+    validations:
+      required: true
+  - type: dropdown
+    id: launcher
+    attributes:
+      label: How is Overwatch installed?
+      options: [Battle.net, Steam, Other]
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error message or blog entries
+      description: Paste any error box text and the lines from the app's "Latest Blog Entry" panel.
+      render: text
