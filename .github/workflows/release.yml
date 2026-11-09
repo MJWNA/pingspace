@@ -1,0 +1,84 @@
+# Builds PingSpace.exe when a version tag is pushed (git tag v1.2.3 && git push --tags),
+# self-tests the built exe, and publishes a GitHub Release with the exe and its SHA-256.
+name: Release
+
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build and publish
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt "pyinstaller>=6.10"
+
+      - name: Tag must match version.py
+        shell: pwsh
+        run: |
+          $v = python -c "from version import __version__; print(__version__)"
+          if ("v$v" -ne "${{ github.ref_name }}") { throw "Tag ${{ github.ref_name }} does not match version.py ($v)" }
+
+      - name: Tests
+        run: |
+          python -m unittest discover -s tests
+          python tests/windows_integration.py
+
+      - name: Build PingSpace.exe
+        run: >
+          pyinstaller --noconfirm --clean --onefile --noconsole --uac-admin
+          --name PingSpace --icon assets/pingspace.ico
+          --add-data "ui:ui" --add-data "ips.json:." --add-data "data/gcp_ranges_snapshot.json:data"
+          main.py
+
+      - name: Self-test the built exe
+        shell: pwsh
+        run: |
+          $p = Start-Process dist\PingSpace.exe -ArgumentList '--self-test' -Wait -PassThru
+          Get-Content dist\self-test.txt
+          if ($p.ExitCode -ne 0) { throw "self-test failed with exit code $($p.ExitCode)" }
+          Remove-Item dist\self-test.txt
+
+      - name: SHA-256 checksum
+        shell: pwsh
+        run: |
+          $h = (Get-FileHash dist\PingSpace.exe -Algorithm SHA256).Hash.ToLower()
+          "$h  PingSpace.exe" | Out-File -Encoding ascii dist\PingSpace.exe.sha256
+          "SHA256=$h" >> $env:GITHUB_ENV
+
+      - name: Release notes from CHANGELOG.md
+        shell: python
+        run: |
+          import os, re
+          version = os.environ["GITHUB_REF_NAME"].lstrip("v")
+          text = open("CHANGELOG.md", encoding="utf-8").read()
+          m = re.search(r"^## \[" + re.escape(version) + r"\].*?\n(.*?)(?=^## \[|\Z)", text, re.S | re.M)
+          if not m:
+              raise SystemExit("No CHANGELOG.md section for " + version)
+          notes = m.group(1).strip()
+          notes += "\n\n### Download\n\n**[PingSpace.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/PingSpace.exe)** (Windows 10/11, no install needed)\n\n"
+          notes += "Step-by-step guide: https://mjwna.github.io/pingspace/\n\n"
+          notes += "SHA-256: `" + os.environ["SHA256"] + "`\n"
+          open("notes.md", "w", encoding="utf-8").write(notes)
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >
+          gh release create ${{ github.ref_name }}
+          dist/PingSpace.exe dist/PingSpace.exe.sha256
+          --title "PingSpace ${{ github.ref_name }}"
+          --notes-file notes.md
+          --verify-tag
