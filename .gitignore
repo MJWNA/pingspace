@@ -20,3 +20,9 @@ env/
 # OS
 .DS_Store
 Thumbs.db
+
+# Build venv
+.build-venv/
+docs/assets/top8.png
+docs/assets/screenshot.png
+docs/assets/top8.webp
