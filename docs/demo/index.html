@@ -754,22 +754,26 @@ function hitbox(src) {
 /* ---------- PINUP CHAOS: ronnie, everywhere, constantly ---------- */
 var Pinups = (function () {
   var box = document.getElementById('pinchaos');
-  var SRC = ['pinup1.webp', 'pinup2.webp'], RATIO = 0.37;
+  // [file, width / height]: wider outfits get positioned by their real width
+  var SRC = [['pinup1.webp', 0.356], ['pinup2.webp', 0.376], ['pinup5.webp', 0.644], ['pinup9.webp', 0.503], ['pinup12.webp', 0.604]];
+  var chosen = SRC[0], RATIO = chosen[1];
+  function choose() { chosen = SRC[Math.random() * SRC.length | 0]; RATIO = chosen[1]; return chosen; }
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   function rnd(a, b) { return a + Math.random() * (b - a); }
-  function pick() { return SRC[Math.random() * SRC.length | 0]; }
+  function pick() { return SRC[Math.random() * SRC.length | 0][0]; }
   function flipMaybe() { return Math.random() < 0.5 ? ' scaleX(-1)' : ''; }
   // wrapper (moves) > pose (static rotate/flip) > img (jiggles)
   function make(cls, h, poseTf, jig) {
     var el = document.createElement('div'); el.className = cls;
     var pose = document.createElement('div'); pose.className = 'pose'; if (poseTf) pose.style.transform = poseTf;
-    var pic = hitbox(pick()); pic.firstChild.style.height = h + 'px';
+    var pic = hitbox(chosen[0]); pic.firstChild.style.height = h + 'px';
     if (jig) { pic.classList.add('jig'); pic.style.animationDuration = rnd(0.3, 0.6) + 's'; }
     pose.appendChild(pic); el.appendChild(pose); box.appendChild(el); return el;
   }
 
   // peekaboo: pops halfway in from a random screen edge, wiggles, ducks back out
   function peek() {
+    choose();
     var W = innerWidth, H = innerHeight, h = rnd(200, 330), w = h * RATIO, x, y, to, pose;
     var edge = ['bottom', 'bottom', 'left', 'right', 'top'][Math.random() * 5 | 0];
     if (edge === 'bottom') { x = rnd(0, W - w); y = H; to = [0, -h * rnd(0.45, 0.62)]; pose = 'rotate(' + rnd(-12, 12) + 'deg)' + flipMaybe(); }
@@ -785,6 +789,7 @@ var Pinups = (function () {
 
   // streaker: sprints across the whole screen, hopping, trailing sparkles
   function run() {
+    choose();
     var W = innerWidth, H = innerHeight, h = rnd(130, 200), w = h * RATIO, ltr = Math.random() < 0.5;
     var y = rnd(40, H - h - 20), hop = rnd(40, 110), n = 12, frames = [];
     var el = make('runner', h, ltr ? '' : 'scaleX(-1)', false);
@@ -799,6 +804,7 @@ var Pinups = (function () {
 
   // wanderer: roams forever, flips and leans into the direction it's going
   function wanderer(h) {
+    choose();
     var el = make('wander', h, '', false), pose = el.firstChild;
     var x = rnd(0, innerWidth - 80), y = rnd(0, innerHeight - h), tx = x, ty = y, vx = 0, vy = 0;
     (function retarget() {
@@ -830,7 +836,7 @@ var Pinups = (function () {
     if (reduce) return;
     var W = innerWidth, H = innerHeight, n = Math.max(5, Math.round(W / 130)), h = 260;
     for (var i = 0; i < n; i++) (function (i) {
-      var el = make('peek', h, i % 2 ? 'scaleX(-1)' : '', true);
+      choose(); var el = make('peek', h, i % 2 ? 'scaleX(-1)' : '', true);
       el.style.left = (i + 0.5) * (W / n) - h * RATIO / 2 + 'px'; el.style.top = H + 'px';
       var up = 'translateY(-' + h * 0.7 + 'px) rotate(-6deg)', up2 = 'translateY(-' + h * 0.62 + 'px) rotate(6deg)';
       el.animate([{ transform: 'translateY(0)' }, { transform: up, offset: 0.15 }, { transform: up2, offset: 0.3 }, { transform: up, offset: 0.45 },
@@ -854,16 +860,22 @@ var Pinups = (function () {
 var Bum = (function () {
   var VOICES = ['sfx/ooh.mp3', 'sfx/ohmy.mp3', 'sfx/whistle.mp3'], WORDS = ['BOING!', 'OOH!', 'OI!', 'CHEEKY!', 'BOOP!', 'OH MY!'];
   var el = document.createElement('div'); el.className = 'bum';
-  el.appendChild(hitbox('pinup2.webp'));
+  var BUMS = ['pinup2.webp', 'pinup5.webp'], bpic = hitbox(BUMS[0]), bimg = bpic.firstChild;
+  el.appendChild(bpic);
   document.body.appendChild(el);
   var hideT = null;
   function place(btn) {
-    var r = btn.getBoundingClientRect(), h = Math.max(150, Math.min(250, r.height * 4.4)), w = h * 0.376;
+    var r = btn.getBoundingClientRect(), h = Math.max(150, Math.min(250, r.height * 4.4)),
+        w = h * (bimg.naturalWidth ? bimg.naturalWidth / bimg.naturalHeight : 0.376);
     el.style.height = h + 'px';
     el.style.left = (r.right - w * 1.05) + 'px';   // stood at the end of the button,
     el.style.top = (r.bottom - h * 0.72) + 'px';   // hip and bum right over it
   }
-  function show(btn) { clearTimeout(hideT); place(btn); el.classList.add('on'); }
+  function show(btn) {
+    clearTimeout(hideT);
+    if (!el.classList.contains('on')) bimg.src = BUMS[Math.random() * BUMS.length | 0];
+    place(btn); el.classList.add('on');
+  }
   function hide(ms) { clearTimeout(hideT); hideT = setTimeout(function () { el.classList.remove('on'); }, ms || 700); }
   function play(src, delay) {
     setTimeout(function () {

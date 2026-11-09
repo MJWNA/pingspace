@@ -285,6 +285,7 @@ def self_test():
     problems = []
     for parts in (("ui", "index.html"), ("ui", "me.jpg"), ("ui", "pinup1.webp"), ("ui", "pinup2.webp"),
                   ("ui", "goo.js"), ("ui", "sausage-cursor.png"), ("ui", "y2k.js"), ("ui", "studio.html"),
+                  ("ui", "pinup5.webp"), ("ui", "pinup9.webp"), ("ui", "pinup12.webp"),
                   ("ui", "sfx", "boing.mp3"), ("ui", "sfx", "ooh.mp3"), ("ui", "sfx", "ohmy.mp3"), ("ui", "sfx", "whistle.mp3"),
                   ("ips.json",), ("data", "gcp_ranges_snapshot.json")):
         if not os.path.exists(ranges.resource_path(*parts)):

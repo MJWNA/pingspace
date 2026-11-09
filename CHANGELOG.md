@@ -5,6 +5,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-11-10
+
+### Added
+
+- Three new pin-ups of Ronnie: the Marilyn (dress billowing over a vent), the sailor salute and the roller-skating diner waitress. The app picks from all five for peekers, streakers, wanderers, lurkers and the cancan (each positioned by its real width), the bum gag sometimes swaps in the Marilyn, the guide's gutters mix them in, and one peeks up from the bottom corner of the studio now and then.
+
 ## [1.3.0] - 2026-11-10
 
 ### Added
@@ -80,7 +86,8 @@ First release of PingSpace, a rework of [Peak2548/ow-server-switcher](https://gi
 - Selecting Australia in the original tool blocked some Australian servers, because its Singapore (`34.124.0.0/16`) and Netherlands (`37.244.0.0/16`) ranges contain Sydney ranges. Australian ranges are now subtracted from every block list.
 - Rules from the original tool applied to every program on the PC. They are now limited to Overwatch.exe, and rules left behind by the original tool are cleaned up.
 
-[Unreleased]: https://github.com/MJWNA/pingspace/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/MJWNA/pingspace/compare/v1.3.1...HEAD
+[1.3.1]: https://github.com/MJWNA/pingspace/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/MJWNA/pingspace/compare/v1.2.2...v1.3.0
 [1.2.2]: https://github.com/MJWNA/pingspace/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/MJWNA/pingspace/compare/v1.2.0...v1.2.1

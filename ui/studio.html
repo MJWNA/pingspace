@@ -109,6 +109,11 @@ label{color:var(--muted);display:inline-flex;align-items:center;gap:4px}
 .dlg .tag{color:var(--cyan);font-size:10px}
 .dlg input{width:100%;margin-bottom:10px}
 .dlg .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+/* now and then a pin-up of ronnie peeks up from the bottom corner to watch u cook */
+#peeker{position:fixed;left:6px;bottom:0;height:230px;pointer-events:none;z-index:40;transform:translateY(105%);
+  transition:transform .5s cubic-bezier(.3,1.5,.5,1);filter:drop-shadow(0 4px 10px rgba(0,0,0,.6))}
+#peeker.up{transform:translateY(42%) rotate(4deg)}
+@media (prefers-reduced-motion:reduce){#peeker{display:none}}
 #toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#000;border:2px solid var(--lime);color:var(--lime);
   padding:6px 14px;font-weight:bold;opacity:0;transition:opacity .25s;pointer-events:none;z-index:60}
 #toast.show{opacity:1}
@@ -161,6 +166,7 @@ label{color:var(--muted);display:inline-flex;align-items:center;gap:4px}
 
 <div id="modal" hidden><div class="dlg" id="dlg"></div></div>
 <div id="toast"></div>
+<img id="peeker" src="pinup9.webp" alt="" aria-hidden="true">
 
 <script>
 'use strict';
@@ -865,6 +871,13 @@ function renderAll() { renderHeader(); renderRack(); renderRoll(); renderInst();
 buildKeys();
 renderAll();
 requestAnimationFrame(frame);
+(function peekaboo() {
+  var PICS = ['pinup1.webp', 'pinup2.webp', 'pinup5.webp', 'pinup9.webp', 'pinup12.webp'], p = $('#peeker');
+  setTimeout(function () {
+    p.src = PICS[Math.random() * PICS.length | 0]; p.classList.add('up');
+    setTimeout(function () { p.classList.remove('up'); peekaboo(); }, 2200);
+  }, 12000 + Math.random() * 16000);
+})();
 window.__studio = { get song() { return song; }, T: T, cur: cur, play: play, stop: stop, loadSong: loadSong, demos: DEMOS };
 
 function connect() {

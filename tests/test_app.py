@@ -146,7 +146,7 @@ class PageTests(unittest.TestCase):
         self.assertNotRegex(self.html, r"(?m)^\s*body\{[^}]*cursor:")
 
     def test_demo_copy_matches_app(self):
-        for name in ("index.html", "me.jpg", "pinup1.webp", "pinup2.webp", "goo.js", "sausage-cursor.png", "y2k.js", "studio.html",
+        for name in ("index.html", "me.jpg", "pinup1.webp", "pinup2.webp", "pinup5.webp", "pinup9.webp", "pinup12.webp", "goo.js", "sausage-cursor.png", "y2k.js", "studio.html",
                      "sfx/boing.mp3", "sfx/ooh.mp3", "sfx/ohmy.mp3", "sfx/whistle.mp3"):
             self.assertTrue(filecmp.cmp(os.path.join(ROOT, "ui", name), os.path.join(ROOT, "docs", "demo", name), shallow=False),
                             "docs/demo/%s is out of date: copy ui/%s over it" % (name, name))
